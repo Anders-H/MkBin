@@ -8,7 +8,7 @@ namespace MkBin
 {
     public class BinCompiler
     {
-        private readonly List<string> _parts = new List<string>();
+        private List<string> _parts = new List<string>();
 
         public BinCompiler(string source)
         {
@@ -18,11 +18,38 @@ namespace MkBin
             foreach (Match part in parts)
                 _parts.Add(part.Value);
 
-            for (var i = 0; i < _parts.Count; i++)
+            var newList = new List<string>();
+
+            foreach (var t in _parts)
             {
-                var isString = _parts[i].StartsWith("\"") && _parts[i].EndsWith("\"");
-                _parts[i] = (isString ? "\"" : "") + Regex.Replace(_parts[i], @"[^\w:/ ]", string.Empty) + (isString ? "\"" : "");
+                var p = t;
+                var times = 1;
+
+                var match = Regex.Match(p, @"\*[0-9]+$");
+
+                if (match.Success)
+                {
+                    var lastIndex = p.LastIndexOf("*", StringComparison.Ordinal);
+                    var timesString = p.Substring(lastIndex + 1);
+                    var valueString = p.Substring(0, lastIndex);
+
+                    if (!int.TryParse(timesString, out times))
+                    {
+                        throw new SystemException($"Failed to parse: {t}");
+                    }
+
+                    p = valueString;
+                }
+
+                var isString = p.StartsWith("\"") && p.EndsWith("\"");
+                
+                for (var j = 0; j < times; j++)
+                    newList.Add(
+                        (isString ? "\"" : "") + Regex.Replace(p, @"[^\w:/ ]", string.Empty) + (isString ? "\"" : "")
+                    );
             }
+
+            _parts = newList;
         }
 
         public byte[] Compile()
