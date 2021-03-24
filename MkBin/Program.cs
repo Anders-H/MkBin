@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace MkBin
 {
@@ -109,55 +110,108 @@ Result: FF EE FF EE FF 00 00 00");
                 Console.WriteLine($"Invalid target file: {targetFilename}");
                 return 7;
             }
-            string source;
-            try
+
+            if (argumentParser.HasParameter("-totext"))
             {
-                using (var sw = new StreamReader(sourceInfo.FullName))
+                byte[] source;
+                try
                 {
-                    source = sw.ReadToEnd();
-                    sw.Close();
+                    source = File.ReadAllBytes(sourceFilename);
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to load: {sourceInfo.FullName}");
+                    return 8;
+                }
+                var textGenerator = new TextGenerator(source);
+                string result;
+                try
+                {
+                    result = textGenerator.ToString();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return 8;
+                }
+                try
+                {
+                    if (targetInfo.Exists)
+                        targetInfo.Delete();
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to delete existing target file: {targetInfo.FullName}");
+                    return 9;
+                }
+                try
+                {
+                    using (var sw = new StreamWriter(targetFilename, false, Encoding.UTF8))
+                    {
+                        sw.Write(result);
+                        sw.Flush();
+                        sw.Close();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to write file: {targetInfo.FullName}");
+                    return 10;
                 }
             }
-            catch
+            else
             {
-                Console.WriteLine($"Failed to load: {sourceInfo.FullName}");
-                return 8;
-            }
-            var compiler = new BinCompiler(source);
-            byte[] bytes;
-            try
-            {
-                bytes = compiler.Compile();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return 8;
-            }
-            try
-            {
-                if (targetInfo.Exists)
-                    targetInfo.Delete();
-            }
-            catch
-            {
-                Console.WriteLine($"Failed to delete existing target file: {targetInfo.FullName}");
-                return 9;
-            }
-            try
-            {
-                using (var bw = new BinaryWriter(targetInfo.OpenWrite()))
+                string source;
+                try
                 {
-                    bw.Write(bytes);
-                    bw.Flush();
-                    bw.Close();
+                    using (var sw = new StreamReader(sourceInfo.FullName))
+                    {
+                        source = sw.ReadToEnd();
+                        sw.Close();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to load: {sourceInfo.FullName}");
+                    return 8;
+                }
+                var compiler = new BinCompiler(source);
+                byte[] bytes;
+                try
+                {
+                    bytes = compiler.Compile();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return 8;
+                }
+                try
+                {
+                    if (targetInfo.Exists)
+                        targetInfo.Delete();
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to delete existing target file: {targetInfo.FullName}");
+                    return 9;
+                }
+                try
+                {
+                    using (var bw = new BinaryWriter(targetInfo.OpenWrite()))
+                    {
+                        bw.Write(bytes);
+                        bw.Flush();
+                        bw.Close();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to write file: {targetInfo.FullName}");
+                    return 10;
                 }
             }
-            catch
-            {
-                Console.WriteLine($"Failed to write file: {targetInfo.FullName}");
-                return 10;
-            }
+
             Console.WriteLine("Ok.");
             return 0;
         }

@@ -9,6 +9,11 @@ of a binary file, and the target file is the binary file that will be written.
 
 `MkBin -source MyTextFile.txt -target BinaryFileToBeCreated.bin`
 
+Text representations can be generated from binary files by adding the -totext argument.
+
+`MkBin -source [source filename] -target [target filename] -totext`
+
+
 There is also an experimentation mode where you can type in expressions and get feedback
 on what bytes would have been generated, as text.
 
@@ -38,7 +43,7 @@ the last two bytes requires four bytes each: `01 01 00 00 00 01 00 00 00`.
 
 ## Examples
 
-Here are three examples of inputs and a text representation of the output.
+Here is a couple of examples of inputs and a text representation of the output.
 
 ### Three 16-bit numbers
 
@@ -68,6 +73,12 @@ byte 96
 **output:**
 
 `00 10 A9 00 8D 21 D0 60`
+
+### Incorrect examples
+
+This will not work because 300 doesn't fit in a *byte*: `100 200 300`
+
+This will not work because 40.000 doesn't fit in a *short*: `10000 20000 30000 40000`
 
 ## Supported control words
 

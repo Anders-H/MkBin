@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace MkBin
@@ -13,8 +14,10 @@ namespace MkBin
         {
             _parts.Clear();
             var parts = Regex.Matches(source, @"[\""].+?[\""]|[^\s]+");
+            
             foreach (Match part in parts)
                 _parts.Add(part.Value);
+
             for (var i = 0; i < _parts.Count; i++)
             {
                 var isString = _parts[i].StartsWith("\"") && _parts[i].EndsWith("\"");
@@ -26,9 +29,8 @@ namespace MkBin
         {
             var currentType = NumberType.ByteType;
             var bytes = new List<byte>();
-            foreach (var part in _parts)
+            foreach (var p in _parts.Select(part => part.Trim()))
             {
-                var p = part.Trim();
                 if (p.StartsWith("\"") && p.EndsWith("\""))
                 {
                     bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(p.Substring(1, p.Length - 2)));
@@ -51,7 +53,7 @@ namespace MkBin
                 ? long.TryParse(s, out _)
                 : ulong.TryParse(s, out _);
 
-        private void WriteNumeric(string n, NumberType type, ref List<byte> bytes)
+        private static void WriteNumeric(string n, NumberType type, ref List<byte> bytes)
         {
             switch (type)
             {
