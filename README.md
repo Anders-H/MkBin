@@ -1,7 +1,8 @@
 # MkBin
 **MkBin** provides a way to procuce binary files or to represent binary files using Unicode text.
-MkBin is primarily a tool for C64 developers who uses Windows as development platform, but
-it can be used bu anyone who wants to represent a binary file as text.
+MkBin is primarily a tool for Commodore 64 developers who uses Windows as development platform,
+who want to be able to represent machine code, sprite data, or any other asset as text.
+But it can be used by anyone who wants to represent any binary data as text.
 
 The program takes a source file and a target file. The source file is a text representation
 of a binary file, and the target file is the binary file that will be written.
@@ -39,5 +40,37 @@ the last two bytes requires four bytes each: `01 01 00 00 00 01 00 00 00`.
 
 Here are three examples of inputs and a text representation of the output.
 
-### Input
+### Three 16-bit numbers
 
+This example shows how three 16-bit numbers can be represented as text.
+
+**Input:**
+
+`short 1 2 3`
+
+**output:**
+
+`01 00 02 00 03 00`
+
+### A machine code program
+
+This example is a complete machine code program for the Commodore 64 that changes the background color to black.
+It is located in memory at 4096, so if loaded to a Commodore 64, it can be started using `SYS 4096`.
+
+**Input:**
+
+```
+ushort 4096 byte 169 0
+141 ushort 53281
+byte 96
+```
+
+**output:**
+
+`00 10 A9 00 8D 21 D0 60`
+
+## Supported control words
+
+The following control words will affect the output format of the succeeding numbers:
+
+`byte` (default), `short`, `ushort`, `int`, `uint`, `long` and `ulong`.
