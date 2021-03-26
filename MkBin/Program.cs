@@ -1,21 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MkBin
 {
     internal class Program
     {
-        private static int Main(string[] args)
-        {
-            var argumentParser = new ArgumentParser(args);
-            var sourceFilename = argumentParser.GetArgumentParameter("-source");
-            var targetFilename = argumentParser.GetArgumentParameter("-target");
-            var prompt = argumentParser.GetArgument("-prompt");
-            var help = argumentParser.GetArgument("/?", "-?", "?", "help", "-help", "/help");
-            if (!string.IsNullOrWhiteSpace(help))
-            {
-                Console.WriteLine(@"Arguments:
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        public const string Arguments = @"Arguments:
 
 -source ""[Source filename]""
 -target ""[Target filename]""
@@ -41,7 +40,32 @@ The following text will create three 16-bit numbers: short 100 200 300
 Result: 64 00 C8 00 2C 01
 
 Example: long 1099226410751
-Result: FF EE FF EE FF 00 00 00");
+Result: FF EE FF EE FF 00 00 00";
+
+        [STAThread]
+        private static int Main(string[] args)
+        {
+            if (args == null || args.Length == 0)
+            {
+                var handle = GetConsoleWindow();
+                ShowWindow(handle, 0);
+
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainWindow());
+
+                ShowWindow(handle, 5);
+                return 0;
+            }
+
+            var argumentParser = new ArgumentParser(args);
+            var sourceFilename = argumentParser.GetArgumentParameter("-source");
+            var targetFilename = argumentParser.GetArgumentParameter("-target");
+            var prompt = argumentParser.GetArgument("-prompt");
+            var help = argumentParser.GetArgument("/?", "-?", "?", "help", "-help", "/help");
+            if (!string.IsNullOrWhiteSpace(help))
+            {
+                Console.WriteLine(Arguments);
                 return 0;
             }
             if (!string.IsNullOrWhiteSpace(prompt))
