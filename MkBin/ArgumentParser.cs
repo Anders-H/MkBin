@@ -12,6 +12,9 @@ namespace MkBin
             _args = args;
         }
 
+        public bool HasArguments =>
+            _args != null && _args.Length > 0;
+
         public string GetArgumentParameter(string argumentName)
         {
             for (var i = 0; i < _args.Length; i++)

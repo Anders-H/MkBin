@@ -45,7 +45,9 @@ Result: FF EE FF EE FF 00 00 00";
         [STAThread]
         private static int Main(string[] args)
         {
-            if (args == null || args.Length == 0)
+            var argumentParser = new ArgumentParser(args);
+
+            if (!argumentParser.HasArguments || argumentParser.HasParameter("-nohide"))
             {
                 var handle = GetConsoleWindow();
                 ShowWindow(handle, 0);
@@ -58,7 +60,6 @@ Result: FF EE FF EE FF 00 00 00";
                 return 0;
             }
 
-            var argumentParser = new ArgumentParser(args);
             var sourceFilename = argumentParser.GetArgumentParameter("-source");
             var targetFilename = argumentParser.GetArgumentParameter("-target");
             var prompt = argumentParser.GetArgument("-prompt");

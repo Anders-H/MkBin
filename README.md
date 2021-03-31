@@ -9,7 +9,7 @@ of a binary file, and the target file is the binary file that will be written.
 
 `MkBin -source MyTextFile.txt -target BinaryFileToBeCreated.bin`
 
-Text representations can be generated from binary files by adding the -totext argument.
+Text representations can be generated from binary files by adding the `-totext` argument.
 
 `MkBin -source [source filename] -target [target filename] -totext`
 
@@ -25,6 +25,8 @@ Text to bin: long 1 2 3
 Ok.
 Text to bin:
 ```
+
+Start without arguments to show the graphical user interface, or with `-nohide` to show the user interface and leave the console window visible.
 
 For a description of how the text-to-binary parser works:
 
