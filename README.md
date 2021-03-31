@@ -80,7 +80,7 @@ byte 96
 
 This will not work because 300 doesn't fit in a *byte*: `100 200 300`
 
-This will not work because 40.000 doesn't fit in a *short*: `10000 20000 30000 40000`
+This will not work because 40.000 doesn't fit in a *short*: `short 10000 20000 30000 40000`
 
 ## Supported control words
 
