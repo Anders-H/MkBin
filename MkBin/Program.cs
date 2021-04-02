@@ -9,10 +9,10 @@ namespace MkBin
     internal class Program
     {
         [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
+        private static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         public const string Arguments = @"Arguments:
 
@@ -73,13 +73,13 @@ Result: FF EE FF EE FF 00 00 00";
             {
                 if (argumentParser.HasParameter("-source") || argumentParser.HasParameter("-target"))
                 {
-                    Console.WriteLine("Conflicting arguments.");
+                    Console.WriteLine(@"Conflicting arguments.");
                     return 1;
                 }
 
                 do
                 {
-                    Console.Write("Text to bin: ");
+                    Console.Write(@"Text to bin: ");
                     var s = (Console.ReadLine() ?? "").Trim();
                     if (string.IsNullOrWhiteSpace(s))
                         return 0;
@@ -92,11 +92,11 @@ Result: FF EE FF EE FF 00 00 00";
                             Console.Write(b[i].ToString("X2"));
                             Console.Write(i >= b.Length - 1 ? "\n" : " ");
                         }
-                        Console.WriteLine("Ok.");
+                        Console.WriteLine(@"Ok.");
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Failed. {e.Message}");
+                        Console.WriteLine($@"Failed. {e.Message}");
                     }
                 } while (true);
             }
@@ -111,13 +111,13 @@ Result: FF EE FF EE FF 00 00 00";
                 sourceInfo = new FileInfo(sourceFilename);
                 if (!sourceInfo.Exists)
                 {
-                    Console.WriteLine("Source file does not exist.");
+                    Console.WriteLine(@"Source file does not exist.");
                     return 2;
                 }
             }
             catch
             {
-                Console.WriteLine($"Invalid source file: {sourceFilename}");
+                Console.WriteLine($@"Invalid source file: {sourceFilename}");
                 return 3;
             }
             if (string.IsNullOrWhiteSpace(targetFilename))
@@ -132,7 +132,7 @@ Result: FF EE FF EE FF 00 00 00";
             }
             catch
             {
-                Console.WriteLine($"Invalid target file: {targetFilename}");
+                Console.WriteLine($@"Invalid target file: {targetFilename}");
                 return 7;
             }
 
@@ -145,7 +145,7 @@ Result: FF EE FF EE FF 00 00 00";
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to load: {sourceInfo.FullName}");
+                    Console.WriteLine($@"Failed to load: {sourceInfo.FullName}");
                     return 8;
                 }
                 var textGenerator = new TextGenerator(source);
@@ -166,7 +166,7 @@ Result: FF EE FF EE FF 00 00 00";
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to delete existing target file: {targetInfo.FullName}");
+                    Console.WriteLine($@"Failed to delete existing target file: {targetInfo.FullName}");
                     return 9;
                 }
                 try
@@ -180,7 +180,7 @@ Result: FF EE FF EE FF 00 00 00";
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to write file: {targetInfo.FullName}");
+                    Console.WriteLine($@"Failed to write file: {targetInfo.FullName}");
                     return 10;
                 }
             }
@@ -197,7 +197,7 @@ Result: FF EE FF EE FF 00 00 00";
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to load: {sourceInfo.FullName}");
+                    Console.WriteLine($@"Failed to load: {sourceInfo.FullName}");
                     return 8;
                 }
                 var compiler = new BinCompiler(source);
@@ -218,7 +218,7 @@ Result: FF EE FF EE FF 00 00 00";
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to delete existing target file: {targetInfo.FullName}");
+                    Console.WriteLine($@"Failed to delete existing target file: {targetInfo.FullName}");
                     return 9;
                 }
                 try
@@ -232,12 +232,12 @@ Result: FF EE FF EE FF 00 00 00";
                 }
                 catch
                 {
-                    Console.WriteLine($"Failed to write file: {targetInfo.FullName}");
+                    Console.WriteLine($@"Failed to write file: {targetInfo.FullName}");
                     return 10;
                 }
             }
 
-            Console.WriteLine("Ok.");
+            Console.WriteLine(@"Ok.");
             return 0;
         }
     }
