@@ -59,16 +59,16 @@ namespace MkBin
             foreach (var p in _parts.Select(part => part.Trim()))
             {
                 if (p.StartsWith("\"") && p.EndsWith("\""))
-                {
                     bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(p.Substring(1, p.Length - 2)));
-                }
                 else if (IsNumeric(p))
                     WriteNumeric(p, currentType, ref bytes);
                 else
                 {
                     var c = GetNumberTypeFromControlWord(p);
+
                     if (c == null)
                         throw new Exception($"Unknown token: {p}");
+
                     currentType = c.Value;
                 }
             }

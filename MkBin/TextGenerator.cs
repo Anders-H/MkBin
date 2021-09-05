@@ -20,6 +20,7 @@ namespace MkBin
             var count = 0;
             var sameCount = 0;
             var lastByte = _bytes[0];
+
             foreach (var b in _bytes)
             {
                 if (lastByte == b)

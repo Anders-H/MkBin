@@ -64,6 +64,7 @@ Result: FF EE FF EE FF 00 00 00";
             var targetFilename = argumentParser.GetArgumentParameter("-target");
             var prompt = argumentParser.GetArgument("-prompt");
             var help = argumentParser.GetArgument("/?", "-?", "?", "help", "-help", "/help");
+
             if (!string.IsNullOrWhiteSpace(help))
             {
                 Console.WriteLine(Arguments);
@@ -81,17 +82,21 @@ Result: FF EE FF EE FF 00 00 00";
                 {
                     Console.Write(@"Text to bin: ");
                     var s = (Console.ReadLine() ?? "").Trim();
+
                     if (string.IsNullOrWhiteSpace(s))
                         return 0;
+
                     try
                     {
                         var comp = new BinCompiler(s);
                         var b = comp.Compile();
+
                         for (var i = 0; i < b.Length; i++)
                         {
                             Console.Write(b[i].ToString("X2"));
                             Console.Write(i >= b.Length - 1 ? "\n" : " ");
                         }
+
                         Console.WriteLine(@"Ok.");
                     }
                     catch (Exception e)
@@ -100,12 +105,15 @@ Result: FF EE FF EE FF 00 00 00";
                     }
                 } while (true);
             }
+
             if (string.IsNullOrWhiteSpace(sourceFilename))
             {
                 Console.WriteLine(@"Missing argument: -source ""Filename""");
                 return 1;
             }
+
             FileInfo sourceInfo;
+            
             try
             {
                 sourceInfo = new FileInfo(sourceFilename);
@@ -125,7 +133,9 @@ Result: FF EE FF EE FF 00 00 00";
                 Console.WriteLine(@"Missing argument: -target ""Filename""");
                 return 4;
             }
+
             FileInfo targetInfo;
+            
             try
             {
                 targetInfo = new FileInfo(targetFilename);
@@ -148,8 +158,10 @@ Result: FF EE FF EE FF 00 00 00";
                     Console.WriteLine($@"Failed to load: {sourceInfo.FullName}");
                     return 8;
                 }
+
                 var textGenerator = new TextGenerator(source);
                 string result;
+                
                 try
                 {
                     result = textGenerator.ToString();
@@ -159,6 +171,7 @@ Result: FF EE FF EE FF 00 00 00";
                     Console.WriteLine(e.Message);
                     return 8;
                 }
+                
                 try
                 {
                     if (targetInfo.Exists)
@@ -169,6 +182,7 @@ Result: FF EE FF EE FF 00 00 00";
                     Console.WriteLine($@"Failed to delete existing target file: {targetInfo.FullName}");
                     return 9;
                 }
+
                 try
                 {
                     using (var sw = new StreamWriter(targetFilename, false, Encoding.UTF8))
@@ -187,6 +201,7 @@ Result: FF EE FF EE FF 00 00 00";
             else
             {
                 string source;
+                
                 try
                 {
                     using (var sw = new StreamReader(sourceInfo.FullName))
@@ -200,8 +215,10 @@ Result: FF EE FF EE FF 00 00 00";
                     Console.WriteLine($@"Failed to load: {sourceInfo.FullName}");
                     return 8;
                 }
+                
                 var compiler = new BinCompiler(source);
                 byte[] bytes;
+                
                 try
                 {
                     bytes = compiler.Compile();
@@ -211,6 +228,7 @@ Result: FF EE FF EE FF 00 00 00";
                     Console.WriteLine(e.Message);
                     return 8;
                 }
+                
                 try
                 {
                     if (targetInfo.Exists)
@@ -221,6 +239,7 @@ Result: FF EE FF EE FF 00 00 00";
                     Console.WriteLine($@"Failed to delete existing target file: {targetInfo.FullName}");
                     return 9;
                 }
+                
                 try
                 {
                     using (var bw = new BinaryWriter(targetInfo.OpenWrite()))
