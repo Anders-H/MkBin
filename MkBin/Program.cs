@@ -185,12 +185,10 @@ Result: FF EE FF EE FF 00 00 00";
 
                 try
                 {
-                    using (var sw = new StreamWriter(targetFilename, false, Encoding.UTF8))
-                    {
-                        sw.Write(result);
-                        sw.Flush();
-                        sw.Close();
-                    }
+                    using var sw = new StreamWriter(targetFilename, false, Encoding.UTF8);
+                    sw.Write(result);
+                    sw.Flush();
+                    sw.Close();
                 }
                 catch
                 {
@@ -204,11 +202,9 @@ Result: FF EE FF EE FF 00 00 00";
                 
                 try
                 {
-                    using (var sw = new StreamReader(sourceInfo.FullName))
-                    {
-                        source = sw.ReadToEnd();
-                        sw.Close();
-                    }
+                    using var sw = new StreamReader(sourceInfo.FullName);
+                    source = sw.ReadToEnd();
+                    sw.Close();
                 }
                 catch
                 {
@@ -242,12 +238,10 @@ Result: FF EE FF EE FF 00 00 00";
                 
                 try
                 {
-                    using (var bw = new BinaryWriter(targetInfo.OpenWrite()))
-                    {
-                        bw.Write(bytes);
-                        bw.Flush();
-                        bw.Close();
-                    }
+                    using var bw = new BinaryWriter(targetInfo.OpenWrite());
+                    bw.Write(bytes);
+                    bw.Flush();
+                    bw.Close();
                 }
                 catch
                 {

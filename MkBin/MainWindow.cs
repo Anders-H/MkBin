@@ -7,6 +7,7 @@ namespace MkBin
     {
         private bool _dirtyflag = true;
         private string _lastResult = "";
+        private Task? _task = null;
 
         public MainWindow()
         {
@@ -42,9 +43,16 @@ namespace MkBin
         {
             if (!_dirtyflag)
                 return;
-            
-            var processText = new Action(ProcessText);
-            processText.BeginInvoke(ProcessTextCompleted, null);
+
+            if (_task == null)
+                _task = Task.Run(() => ProcessText());
+
+            if (_task.IsCompletedSuccessfully)
+            {
+                txtOutput.Text = _lastResult;
+                _task.Dispose();
+                _task = Task.Run(() => ProcessText());
+            }
         }
 
         private void ProcessText()
