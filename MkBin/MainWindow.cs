@@ -5,9 +5,11 @@ namespace MkBin
 {
     public partial class MainWindow : Form
     {
-        private bool _dirtyflag = true;
+        private bool _dirtyflag = false;
         private string _lastResult = "";
         private Task? _task = null;
+        private string _lastDocumentFilename = "";
+        private string _lastBinaryFilename = "";
 
         public MainWindow()
         {
@@ -31,12 +33,15 @@ namespace MkBin
 
         private void saveBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            using var x = new SaveBinaryFile(txtInput.Text);
 
+            if (x.ShowDialog(this) == DialogResult.OK)
+                _lastBinaryFilename = x.Filename;
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Close();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -77,11 +82,6 @@ namespace MkBin
             }
         }
 
-        private void ProcessTextCompleted(IAsyncResult r)
-        {
-            Invoke(new Action(DisplayResult));
-        }
-
         private void DisplayResult()
         {
             txtOutput.Text = _lastResult;
@@ -95,6 +95,15 @@ namespace MkBin
         private void txtInput_TextChanged(object sender, EventArgs e)
         {
             _dirtyflag = true;
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_dirtyflag)
+            {
+                if (MessageBox.Show(this, @"You have unsaved work. Are you sure you want to quit?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                    e.Cancel = true;
+            }
         }
     }
 }
