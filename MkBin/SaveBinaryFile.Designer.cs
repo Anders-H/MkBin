@@ -30,7 +30,7 @@ namespace MkBin
         private void InitializeComponent()
         {
             this.lblCompile = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtCompile = new System.Windows.Forms.TextBox();
             this.txtTargetFile = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnBrowse = new System.Windows.Forms.Button();
@@ -49,13 +49,13 @@ namespace MkBin
             this.lblCompile.TabIndex = 0;
             this.lblCompile.Text = "Compile:";
             // 
-            // textBox1
+            // txtCompile
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(12, 28);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(472, 23);
-            this.textBox1.TabIndex = 1;
+            this.txtCompile.Enabled = false;
+            this.txtCompile.Location = new System.Drawing.Point(12, 28);
+            this.txtCompile.Name = "txtCompile";
+            this.txtCompile.Size = new System.Drawing.Size(472, 23);
+            this.txtCompile.TabIndex = 1;
             // 
             // txtTargetFile
             // 
@@ -81,6 +81,7 @@ namespace MkBin
             this.btnBrowse.TabIndex = 6;
             this.btnBrowse.Text = "Browse...";
             this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // btnOk
             // 
@@ -134,7 +135,7 @@ namespace MkBin
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtTargetFile);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtCompile);
             this.Controls.Add(this.lblCompile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -144,6 +145,7 @@ namespace MkBin
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Save binary file";
             this.Load += new System.EventHandler(this.SaveBinaryFile_Load);
+            this.Shown += new System.EventHandler(this.SaveBinaryFile_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,7 +154,7 @@ namespace MkBin
         #endregion
 
         private System.Windows.Forms.Label lblCompile;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtCompile;
         private System.Windows.Forms.TextBox txtTargetFile;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnBrowse;

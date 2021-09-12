@@ -15,7 +15,7 @@ namespace MkBin
 
         static SaveBinaryFile()
         {
-            TargetFile = "";
+            TargetFile = "target.bin";
             RunIfSuccessful = "notepad.exe {filename}";
             RunIfSuccessfulEnabled = false;
         }
@@ -28,10 +28,7 @@ namespace MkBin
 
         private void SaveBinaryFile_Load(object sender, EventArgs e)
         {
-            txtTargetFile.Text = string.IsNullOrWhiteSpace(TargetFile)
-                ? txtTargetFile.Text
-                : $"{_source}.bin";
-
+            txtTargetFile.Text = TargetFile;
             txtRunIfSuccessful.Text = RunIfSuccessful;
             chkRunIfSuccessful.Checked = RunIfSuccessfulEnabled;
         }
@@ -43,9 +40,58 @@ namespace MkBin
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            var success = false;
+            try
+            {
+                // TODO: Save
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Save failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             TargetFile = txtTargetFile.Text;
             RunIfSuccessful = txtRunIfSuccessful.Text;
             RunIfSuccessfulEnabled = chkRunIfSuccessful.Checked;
+
+            if (success)
+                DialogResult = DialogResult.OK;
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            using var x = new SaveFileDialog();
+            x.Title = "Binary output file";
+
+            if (x.ShowDialog(this) == DialogResult.OK)
+                txtTargetFile.Text = x.FileName;
+        }
+
+        private void SaveBinaryFile_Shown(object sender, EventArgs e)
+        {
+            btnOk.Enabled = false;
+            Cursor = Cursors.WaitCursor;
+            txtCompile.Text = "";
+            Refresh();
+            Application.DoEvents();
+            Byte[]? bytes = null;
+
+            var x = new BinCompiler(_source);
+            var success = false;
+            try
+            {
+                bytes = x.Compile();
+                txtCompile.Text = "Ok.";
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                txtCompile.Text = ex.Message;
+            }
+
+            btnOk.Enabled = success;
+            Cursor = Cursors.Default;
         }
     }
 }
