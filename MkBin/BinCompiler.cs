@@ -68,6 +68,9 @@ public class BinCompiler
     public byte[] Compile()
     {
         var currentType = NumberType.ByteType;
+        var currentAddress = 0L;
+        var addressType = NumberType.UShortType;
+
         var bytes = new List<byte>();
 
         foreach (var p in _parts.Select(part => part.Trim()))
@@ -82,6 +85,15 @@ public class BinCompiler
                 continue;
 
             if (ControlWordCompiler.Compile(p, ref currentType))
+                continue;
+
+            if (AddressCompiler.CompileSet(p, ref currentAddress))
+            {
+                addressType = currentType;
+                continue;
+            }
+
+            if (AddressCompiler.CompileGet(p, addressType, currentAddress + bytes.Count, ref bytes))
                 continue;
 
             throw new Exception($"Unknown token: {p}");

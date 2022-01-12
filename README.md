@@ -99,7 +99,7 @@ Remarks (`#`) are an exception since they are terminated by a line break.
 ### Address
 
 An address is a location number that can be stored in any numeric datatype. The current will be used. When recalled, the number of bytes (regardles of address datatype) that has been inserted since the address was stored, is added to the number.
-To store an address in the current datatype (`byte` is default), use `SetAdr:n`. To recall the stored address, use `Adr`.
+To store an address in the current datatype (`ushort` is default), use `SetAdr:n`. To recall the stored address, use `Adr`.
 The following example stores an address in `byte` format, and recalls it twice.
 
 **Input:**
