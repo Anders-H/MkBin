@@ -1,11 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace MkBin;
 
 public partial class SaveBinaryFile : Form
 {
-    private string _source;
+    private readonly string _source;
+    private byte[]? _bytes;
 
     private static string TargetFile { get; set; }
     private static string RunIfSuccessful { get; set; }
@@ -16,7 +18,7 @@ public partial class SaveBinaryFile : Form
 
     static SaveBinaryFile()
     {
-        TargetFile = "target.bin";
+        TargetFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "target.bin");
         RunIfSuccessful = "notepad.exe {filename}";
         RunIfSuccessfulEnabled = false;
     }
@@ -41,15 +43,25 @@ public partial class SaveBinaryFile : Form
 
     private void btnOk_Click(object sender, EventArgs e)
     {
+        if (_bytes is not { Length: > 0 })
+        {
+            MessageBox.Show(this, @"You have nothing to save.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
         var success = false;
         try
         {
-            // TODO: Save
-
+            var targetInfo = new FileInfo(txtTargetFile.Text);
+            using var bw = new BinaryWriter(targetInfo.OpenWrite());
+            bw.Write(_bytes);
+            bw.Flush();
+            bw.Close();
+            success = true;
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, "Save failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, ex.Message, @"Save failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         TargetFile = txtTargetFile.Text;
@@ -63,7 +75,9 @@ public partial class SaveBinaryFile : Form
     private void btnBrowse_Click(object sender, EventArgs e)
     {
         using var x = new SaveFileDialog();
-        x.Title = "Binary output file";
+        x.Title = @"Binary output file";
+        x.FileName = txtTargetFile.Text;
+        x.Filter = @"*.*|*.*";
 
         if (x.ShowDialog(this) == DialogResult.OK)
             txtTargetFile.Text = x.FileName;
@@ -76,14 +90,14 @@ public partial class SaveBinaryFile : Form
         txtCompile.Text = "";
         Refresh();
         Application.DoEvents();
-        byte[]? bytes = null;
+        _bytes = null;
 
         var x = new BinCompiler(_source);
         var success = false;
         try
         {
-            bytes = x.Compile();
-            txtCompile.Text = "Ok.";
+            _bytes = x.Compile();
+            txtCompile.Text = @"Ok.";
             success = true;
         }
         catch (Exception ex)
