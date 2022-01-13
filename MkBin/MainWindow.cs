@@ -9,9 +9,8 @@ public partial class MainWindow : Form
 {
     private bool _dirtyflag = false;
     private string _lastResult = "";
-    private Task _task;
+    private Task? _task;
     private string _lastDocumentFilename = "";
-    private string _lastBinaryFilename = "";
 
     public MainWindow()
     {
@@ -30,15 +29,29 @@ public partial class MainWindow : Form
 
     private void saveTextDescriptionOfBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        using var x = new SaveFileDialog();
+        x.Title = @"Load text description of binary file";
+        x.Filter = @"*.txt|*.txt|*.*|*.*";
+        x.FileName = _lastDocumentFilename;
+        if (x.ShowDialog(this) == DialogResult.OK)
+        {
+            try
+            {
+                //TODO
 
+                _lastDocumentFilename = x.FileName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, @"Save failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 
     private void saveBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
         using var x = new SaveBinaryFile(txtInput.Text);
-
-        if (x.ShowDialog(this) == DialogResult.OK)
-            _lastBinaryFilename = x.Filename;
+        x.ShowDialog(this);
     }
 
     private void quitToolStripMenuItem_Click(object sender, EventArgs e)

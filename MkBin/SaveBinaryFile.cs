@@ -13,9 +13,6 @@ public partial class SaveBinaryFile : Form
     private static string RunIfSuccessful { get; set; }
     private static bool RunIfSuccessfulEnabled { get; set; }
 
-    public string Filename =>
-        txtTargetFile.Text;
-
     static SaveBinaryFile()
     {
         TargetFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "target.bin");
