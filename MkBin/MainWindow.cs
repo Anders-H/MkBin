@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -7,6 +8,7 @@ namespace MkBin;
 
 public partial class MainWindow : Form
 {
+    private string _text;
     private bool _dirtyflag = false;
     private string _lastResult = "";
     private Task? _task;
@@ -37,13 +39,20 @@ public partial class MainWindow : Form
         {
             try
             {
-                //TODO
-
+                var options = new FileStreamOptions
+                {
+                    Mode = FileMode.Create
+                };
+                using var sw = new StreamWriter(x.FileName, Encoding.UTF8, options);
+                sw.Write(txtInput.Text);
+                sw.Flush();
+                sw.Close();
                 _lastDocumentFilename = x.FileName;
+                Text = $@"{Text} - {_lastDocumentFilename}";
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, @"Save failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MsgBox.SaveFailed(this, ex.Message);
             }
         }
     }
@@ -65,13 +74,13 @@ public partial class MainWindow : Form
             return;
 
         if (_task == null)
-            _task = Task.Run(() => ProcessText());
+            _task = Task.Run(ProcessText);
 
         if (_task.IsCompletedSuccessfully)
         {
             txtOutput.Text = _lastResult;
             _task.Dispose();
-            _task = Task.Run(() => ProcessText());
+            _task = Task.Run(ProcessText);
         }
     }
 
@@ -112,12 +121,22 @@ public partial class MainWindow : Form
         _dirtyflag = true;
     }
 
-    private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+    private void MainWindow_FormClosing(object sender, FormClosingEventArgs e) =>
+        e.Cancel = _dirtyflag && MsgBox.AskQuit(this);
+
+    private void MainWindow_Load(object sender, EventArgs e)
     {
-        if (_dirtyflag)
-        {
-            if (MessageBox.Show(this, @"You have unsaved work. Are you sure you want to quit?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
-                e.Cancel = true;
-        }
+        _text = Text;
+    }
+
+    private void newDocumentToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (_dirtyflag && !MsgBox.AskNew(this))
+            return;
+
+        _lastDocumentFilename = "";
+        txtInput.Text = "";
+        Text = _text;
+        _dirtyflag = false;
     }
 }

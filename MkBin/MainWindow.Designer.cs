@@ -44,6 +44,7 @@ namespace MkBin
             this.txtInput = new System.Windows.Forms.TextBox();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.newDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -66,6 +67,7 @@ namespace MkBin
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newDocumentToolStripMenuItem,
             this.loadTextDescriptionOfBinaryFileToolStripMenuItem,
             this.loadBinaryFileToolStripMenuItem,
             this.saveTextDescriptionOfBinaryFileToolStripMenuItem,
@@ -180,6 +182,13 @@ namespace MkBin
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // newDocumentToolStripMenuItem
+            // 
+            this.newDocumentToolStripMenuItem.Name = "newDocumentToolStripMenuItem";
+            this.newDocumentToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.newDocumentToolStripMenuItem.Text = "New document";
+            this.newDocumentToolStripMenuItem.Click += new System.EventHandler(this.newDocumentToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -194,6 +203,7 @@ namespace MkBin
             this.Name = "MainWindow";
             this.Text = "MkBin";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -225,5 +235,6 @@ namespace MkBin
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripMenuItem newDocumentToolStripMenuItem;
     }
 }

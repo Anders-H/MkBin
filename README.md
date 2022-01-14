@@ -35,6 +35,13 @@ For a basic description of how the text-to-binary parser works:
 
 `MkBin -help`
 
+# The text format
+
+The rest of this document describes how the program converts a text file to a binary file.
+
+*A note on parsing: The separator between items (numbers, datatypes, etc.) is any whitespace (space, tab, new line...).
+The exeption is comments/remarks (`#`) that are terminated with new line.*
+
 ## Datatypes
 
 All numbers are expected to be bytes (and cannot be larger than 255) unless the type
@@ -45,6 +52,9 @@ to byte, use the keyword `byte`.
 
 `1 int 1 1` gives nine bytes, because the first 1 requires one byte and
 the last two bytes requires four bytes each: `01 01 00 00 00 01 00 00 00`.
+
+*Before any datatype is found in the text document, numbers are assumed to be bytes and any address are assumed to be
+unsigned short (16-bit). The datatype directives affect both. Labels are always of the same type as the address.*
 
 ## Examples
 
@@ -85,12 +95,6 @@ This will not work because 300 doesn't fit in a *byte*: `100 200 300`
 
 This will not work because 40.000 doesn't fit in a *short*: `short 10000 20000 30000 40000`
 
-## Supported control words
-
-The following control words will affect the output format of the succeeding numbers:
-
-`byte` (default), `short`, `ushort`, `int`, `uint`, `long` and `ulong`.
-
 ## Other features
 
 Records are separated by whitespace, so spaces cannot be inserted arbitrarily. To write five `1`, type `1*5` and get `01 01 01 01 01`. `1 * 5` will produce an error.
@@ -98,8 +102,9 @@ Remarks (`#`) are an exception since they are terminated by a line break.
 
 ### Address
 
-An address is a location number that can be stored in any numeric datatype. The current will be used. When recalled, the number of bytes (regardles of address datatype) that has been inserted since the address was stored, is added to the number.
-To store an address in the current datatype (`ushort` is default), use `SetAdr:n`. To recall the stored address, use `Adr`.
+An address is a location number that can be stored as any numeric datatype. The current will be used (`ushort` if no type has been specified yet) for storing.
+When recalled, it is always recalled in the type it was stored, regardless of current the type. The passed number of bytes will be added, so a document larger than 256 bytes cannot have an address stored in byte format.
+To store an address, use `SetAdr:[n]` where `n` is the address (i.e. `SetAdr:2048`). To recall the stored address, use `Adr`.
 The following example stores an address in `byte` format, and recalls it twice.
 
 **Input:**
