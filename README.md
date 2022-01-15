@@ -124,6 +124,36 @@ Adr Adr
 
 `64 65`
 
+### Labels
+
+A label is a named address. `SetLbl:[n]`, where `n` is the name that will be used for current address (i.e. `SetLbl:Here`), stores a label.
+`Lbl:[n]`, where `n` is the name of a previously stored address will recall that address.
+The current datatype will not affect `SetLbl` or `Lbl`, it relies on the datatype the address is stored in (`ushort` if nothing is specified). Example:
+
+**Input:**
+
+```
+# Set start address in ushort format (default type for address)
+SetAdr:2048
+
+# Write three bytes (default type for numbers) and store a label at 2050
+1 1 1 SetLbl:SomeName
+
+# Write three more bytes
+1 1 1
+
+# Recall the current address (in ushort format - 2053)
+Adr
+
+# Recall the previously stored label named SomeName (also in ushort format - 2050)
+Lbl:SomeName
+```
+
+**Output:**
+
+`64 65`
+
+
 ### Multiply
 
 To repeat the last digit a given number of times, append * directly followd by the number of times you want to repeat. Example:
@@ -140,7 +170,7 @@ To repeat the last digit a given number of times, append * directly followd by t
 
 ### Remarks
 
-A remark (`#`) will cause the parser to ignore everything until the next line break. Example
+A remark (`#`) will cause the parser to ignore everything until the next line break. Example:
 
 **Input:**
 

@@ -4,9 +4,9 @@ namespace MkBin;
 
 public class TextGenerator
 {
-    private readonly byte[] _bytes;
+    private readonly byte[]? _bytes;
 
-    public TextGenerator(byte[] bytes)
+    public TextGenerator(byte[]? bytes)
     {
         _bytes = bytes;
     }

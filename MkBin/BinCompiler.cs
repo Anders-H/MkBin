@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace MkBin;
 
 public class BinCompiler
 {
-    private List<string> _parts = new List<string>();
+    private readonly List<string> _parts = new();
 
     public BinCompiler(string source)
     {
@@ -68,9 +69,9 @@ public class BinCompiler
     public byte[] Compile()
     {
         var currentType = NumberType.ByteType;
-        var currentAddress = 0L;
+        BigInteger currentAddress = 0;
         var addressType = NumberType.UShortType;
-
+        var labels = new LabelList();
         var bytes = new List<byte>();
 
         foreach (var p in _parts.Select(part => part.Trim()))
@@ -94,6 +95,12 @@ public class BinCompiler
             }
 
             if (AddressCompiler.CompileGet(p, addressType, currentAddress + bytes.Count, ref bytes))
+                continue;
+
+            if (LabelCompiler.CompileSet(p, ref labels, currentAddress + bytes.Count))
+                continue;
+
+            if (LabelCompiler.CompileGet(p, ref labels, addressType, currentAddress + bytes.Count, ref bytes))
                 continue;
 
             throw new Exception($"Unknown token: {p}");
