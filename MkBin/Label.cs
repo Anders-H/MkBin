@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace MkBin;
 
@@ -12,4 +13,7 @@ public class Label
         Name = name;
         Address = address;
     }
+
+    public bool Is(string name) =>
+        string.Compare(Name, name, StringComparison.CurrentCultureIgnoreCase) == 0;
 }

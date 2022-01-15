@@ -8,8 +8,8 @@ namespace MkBin;
 
 public partial class MainWindow : Form
 {
-    private string _text;
-    private bool _dirtyflag = false;
+    private string? _text;
+    private bool _dirtyflag;
     private string _lastResult = "";
     private Task? _task;
     private string _lastDocumentFilename = "";
