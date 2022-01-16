@@ -110,9 +110,6 @@ The following example stores an address in `byte` format, and recalls it twice.
 **Input:**
 
 ```
-# Ensure datatype is byte
-byte
-
 # The start address of the file is 100 in byte format
 SetAdr:100
 
