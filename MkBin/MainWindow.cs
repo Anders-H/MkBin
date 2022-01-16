@@ -10,6 +10,7 @@ public partial class MainWindow : Form
 {
     private string? _text;
     private bool _dirtyflag;
+    private bool _unsaved;
     private string _lastResult = "";
     private Task? _task;
     private string _lastDocumentFilename = "";
@@ -21,7 +22,30 @@ public partial class MainWindow : Form
 
     private void loadTextDescriptionOfBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        if (_unsaved && !MsgBox.AskOpen(this))
+            return;
 
+        using var x = new OpenFileDialog();
+        x.Title = @"Load text description of binary file";
+        x.Filter = @"*.txt|*.txt|*.*|*.*";
+        x.FileName = _lastDocumentFilename;
+        if (x.ShowDialog(this) == DialogResult.OK)
+        {
+            try
+            {
+                using var sr = new StreamReader(x.FileName, Encoding.UTF8);
+                var t = sr.ReadToEnd();
+                sr.Close();
+                txtInput.Text = t;
+                _lastDocumentFilename = x.FileName;
+                Text = $@"{Text} - {_lastDocumentFilename}";
+                _unsaved = false;
+            }
+            catch (Exception ex)
+            {
+                MsgBox.OpenFailed(this, ex.Message);
+            }
+        }
     }
 
     private void loadBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -32,7 +56,7 @@ public partial class MainWindow : Form
     private void saveTextDescriptionOfBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
         using var x = new SaveFileDialog();
-        x.Title = @"Load text description of binary file";
+        x.Title = @"Save text description of binary file";
         x.Filter = @"*.txt|*.txt|*.*|*.*";
         x.FileName = _lastDocumentFilename;
         if (x.ShowDialog(this) == DialogResult.OK)
@@ -49,6 +73,7 @@ public partial class MainWindow : Form
                 sw.Close();
                 _lastDocumentFilename = x.FileName;
                 Text = $@"{Text} - {_lastDocumentFilename}";
+                _unsaved = false;
             }
             catch (Exception ex)
             {
@@ -119,10 +144,11 @@ public partial class MainWindow : Form
     private void txtInput_TextChanged(object sender, EventArgs e)
     {
         _dirtyflag = true;
+        _unsaved = true;
     }
 
     private void MainWindow_FormClosing(object sender, FormClosingEventArgs e) =>
-        e.Cancel = _dirtyflag && MsgBox.AskQuit(this);
+        e.Cancel = _unsaved && MsgBox.AskQuit(this);
 
     private void MainWindow_Load(object sender, EventArgs e)
     {
@@ -131,12 +157,12 @@ public partial class MainWindow : Form
 
     private void newDocumentToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (_dirtyflag && !MsgBox.AskNew(this))
+        if (_unsaved && !MsgBox.AskNew(this))
             return;
 
         _lastDocumentFilename = "";
         txtInput.Text = "";
         Text = _text;
-        _dirtyflag = false;
+        _unsaved = false;
     }
 }
