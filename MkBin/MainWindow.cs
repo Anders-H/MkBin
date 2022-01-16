@@ -50,7 +50,30 @@ public partial class MainWindow : Form
 
     private void loadBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        if (_unsaved && !MsgBox.AskOpen(this))
+            return;
 
+        using var x = new OpenFileDialog();
+        x.Title = @"Open binary file";
+        x.Filter = @"*.*|*.*";
+        if (x.ShowDialog(this) == DialogResult.OK)
+        {
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                var bytes = File.ReadAllBytes(x.FileName);
+                var decompiler = new BitDecompiler(bytes);
+                var result = decompiler.Decompile();
+                txtInput.Text = result;
+                Cursor = Cursors.Default;
+                _unsaved = true;
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                MsgBox.OpenFailed(this, ex.Message);
+            }
+        }
     }
 
     private void saveTextDescriptionOfBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -129,11 +152,6 @@ public partial class MainWindow : Form
         {
             _lastResult = $"Failed to compile string!{Environment.NewLine}{e.Message}";
         }
-    }
-
-    private void DisplayResult()
-    {
-        txtOutput.Text = _lastResult;
     }
 
     private void MainWindow_Shown(object sender, EventArgs e)
