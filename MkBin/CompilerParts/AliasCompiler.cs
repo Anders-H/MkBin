@@ -6,7 +6,7 @@ public class AliasCompiler
 {
     public static Alias? Compile(string raw)
     {
-        var match = Regex.Match(raw, @"(?i)^alias:([a-z0-9])+\s+(.+)$");
+        var match = Regex.Match(raw, @"(?i)^alias:([a-z0-9]+)\s+(.+)$");
 
         if (!match.Success)
             return null;

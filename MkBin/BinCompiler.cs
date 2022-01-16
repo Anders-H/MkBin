@@ -96,8 +96,8 @@ public class BinCompiler
     public byte[] Compile()
     {
         var currentType = NumberType.ByteType;
+        var addressType = currentType;
         BigInteger currentAddress = 0;
-        var addressType = NumberType.UShortType;
         var labels = new LabelList();
         var bytes = new List<byte>();
 
@@ -115,19 +115,19 @@ public class BinCompiler
             if (ControlWordCompiler.Compile(p, ref currentType))
                 continue;
 
-            if (AddressCompiler.CompileSet(p, ref currentAddress))
+            if (AddressCompiler.CompileSet(p, currentType, ref currentAddress))
             {
                 addressType = currentType;
                 continue;
             }
 
-            if (AddressCompiler.CompileGet(p, addressType, currentAddress + bytes.Count, ref bytes))
+            if (AddressCompiler.CompileGet(p, addressType, currentAddress + bytes.Count - 1, ref bytes))
                 continue;
 
-            if (LabelCompiler.CompileSet(p, ref labels, currentAddress + bytes.Count))
+            if (LabelCompiler.CompileSet(p, ref labels, currentAddress + bytes.Count - 1))
                 continue;
 
-            if (LabelCompiler.CompileGet(p, ref labels, addressType, currentAddress + bytes.Count, ref bytes))
+            if (LabelCompiler.CompileGet(p, ref labels, addressType, ref bytes))
                 continue;
 
             throw new Exception($"Unknown token: {p}");

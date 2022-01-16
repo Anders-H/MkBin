@@ -7,7 +7,7 @@ namespace MkBin.CompilerParts;
 
 public static class AddressCompiler
 {
-    public static bool CompileSet(string input, ref BigInteger currentAddress)
+    public static bool CompileSet(string input, NumberType currentType, ref BigInteger currentAddress)
     {
         var i = input.ToLower();
         var match = Regex.Match(i, @"^setadr:([0-9]+)$");
@@ -18,6 +18,17 @@ public static class AddressCompiler
             try
             {
                 var parsed = BigInteger.Parse(v);
+
+                try
+                {
+                    var temp = new List<byte>();
+                    NumberCompiler.WriteNumeric(v, currentType, ref temp);
+                }
+                catch
+                {
+                    throw new Exception($"Address {v} cannot fit in type {currentType}.");
+                }
+
                 currentAddress = parsed;
                 return true;
             }

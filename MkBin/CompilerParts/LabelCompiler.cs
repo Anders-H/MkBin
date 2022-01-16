@@ -29,7 +29,7 @@ namespace MkBin.CompilerParts
             return false;
         }
 
-        public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, BigInteger currentValue, ref List<byte> output)
+        public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, ref List<byte> output)
         {
             var i = input.ToLower();
             var match = Regex.Match(i, @"^lbl:([a-z0-9]+)$");

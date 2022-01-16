@@ -102,7 +102,7 @@ Remarks (`#`) and aliases are an exceptions since they are terminated by a line 
 
 ### Address
 
-An address is a location number that can be stored as any numeric datatype. The current will be used (`ushort` if no type has been specified yet) for storing.
+An address is a location number that can be stored as any numeric datatype. The current datatype will be used (`byte` if no type has been specified yet) for storing.
 When recalled, it is always recalled in the type it was stored, regardless of current the type. The passed number of bytes will be added, so a document larger than 256 bytes cannot have an address stored in byte format.
 To store an address, use `SetAdr:[n]` where `n` is the address (i.e. `SetAdr:2048`). To recall the stored address, use `Adr`.
 The following example stores an address in `byte` format, and recalls it twice.
@@ -145,15 +145,17 @@ X X
 
 A label is a named address. `SetLbl:[n]`, where `n` is the name that will be used for current address (i.e. `SetLbl:Here`), stores a label.
 `Lbl:[n]`, where `n` is the name of a previously stored address will recall that address.
-The current datatype will not affect `SetLbl` or `Lbl`, it relies on the datatype the address is stored in (`ushort` if nothing is specified). Example:
+The current datatype will not affect `SetLbl` or `Lbl`, it relies on the datatype the address is stored in. Example:
 
 **Input:**
 
 ```
-# Set start address in ushort format (default type for address)
+# Set start address in ushort format
+ushort
 SetAdr:2048
 
 # Write three bytes (default type for numbers) and store a label at 2050
+byte
 1 1 1 SetLbl:SomeName
 
 # Write three more bytes
@@ -168,8 +170,7 @@ Lbl:SomeName
 
 **Output:**
 
-`64 65`
-
+`01 01 01 01 01 01 05 08 02 08`
 
 ### Multiply
 

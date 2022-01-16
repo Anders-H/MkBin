@@ -14,6 +14,7 @@ public partial class MainWindow : Form
     private string _lastMessage = "";
     private Task? _task;
     private string _lastDocumentFilename = "";
+    private bool _hex = true;
 
     public MainWindow()
     {
@@ -132,9 +133,10 @@ public partial class MainWindow : Form
             var result = binCompiler.Compile();
             var s = new StringBuilder();
             _lastMessage = $"{result.Length} bytes";
+            var format = _hex ? "X2" : "";
             for (var i = 0; i < result.Length; i++)
             {
-                s.Append(result[i].ToString("X2"));
+                s.Append(result[i].ToString(format));
                 s.Append(i >= result.Length - 1 || i % 8 == 7 ? Environment.NewLine : " ");
             }
 
@@ -243,5 +245,21 @@ public partial class MainWindow : Form
         {
             MsgBox.OpenFailed(this, ex.Message);
         }
+    }
+
+    private void hexToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        hexToolStripMenuItem.Checked = true;
+        decToolStripMenuItem.Checked = false;
+        _hex = true;
+        _dirtyFlag = true;
+    }
+
+    private void decToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        decToolStripMenuItem.Checked = true;
+        hexToolStripMenuItem.Checked = false;
+        _hex = false;
+        _dirtyFlag = true;
     }
 }
