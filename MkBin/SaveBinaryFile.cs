@@ -49,11 +49,7 @@ public partial class SaveBinaryFile : Form
         var success = false;
         try
         {
-            var targetInfo = new FileInfo(txtTargetFile.Text);
-            using var bw = new BinaryWriter(targetInfo.OpenWrite());
-            bw.Write(_bytes);
-            bw.Flush();
-            bw.Close();
+            Storage.SaveBytes(txtTargetFile.Text, _bytes);
             success = true;
         }
         catch (Exception ex)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,9 +8,10 @@ namespace MkBin;
 public partial class MainWindow : Form
 {
     private string? _text;
-    private bool _dirtyflag;
+    private bool _dirtyFlag;
     private bool _unsaved;
     private string _lastResult = "";
+    private string _lastMessage = "";
     private Task? _task;
     private string _lastDocumentFilename = "";
 
@@ -29,22 +29,20 @@ public partial class MainWindow : Form
         x.Title = @"Load text description of binary file";
         x.Filter = @"*.txt|*.txt|*.*|*.*";
         x.FileName = _lastDocumentFilename;
-        if (x.ShowDialog(this) == DialogResult.OK)
+        
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        try
         {
-            try
-            {
-                using var sr = new StreamReader(x.FileName, Encoding.UTF8);
-                var t = sr.ReadToEnd();
-                sr.Close();
-                txtInput.Text = t;
-                _lastDocumentFilename = x.FileName;
-                Text = $@"{Text} - {_lastDocumentFilename}";
-                _unsaved = false;
-            }
-            catch (Exception ex)
-            {
-                MsgBox.OpenFailed(this, ex.Message);
-            }
+            txtInput.Text = Storage.LoadText(x.FileName);
+            _lastDocumentFilename = x.FileName;
+            Text = $@"{_text} - {_lastDocumentFilename}";
+            _unsaved = false;
+        }
+        catch (Exception ex)
+        {
+            MsgBox.OpenFailed(this, ex.Message);
         }
     }
 
@@ -56,23 +54,23 @@ public partial class MainWindow : Form
         using var x = new OpenFileDialog();
         x.Title = @"Open binary file";
         x.Filter = @"*.*|*.*";
-        if (x.ShowDialog(this) == DialogResult.OK)
+        
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
+        
+        Cursor = Cursors.WaitCursor;
+        try
         {
-            Cursor = Cursors.WaitCursor;
-            try
-            {
-                var bytes = File.ReadAllBytes(x.FileName);
-                var decompiler = new BitDecompiler(bytes);
-                var result = decompiler.Decompile();
-                txtInput.Text = result;
-                Cursor = Cursors.Default;
-                _unsaved = true;
-            }
-            catch (Exception ex)
-            {
-                Cursor = Cursors.Default;
-                MsgBox.OpenFailed(this, ex.Message);
-            }
+            txtInput.Text = Storage.LoadBinAsText(x.FileName);
+            Cursor = Cursors.Default;
+            _unsaved = true;
+            _lastDocumentFilename = "";
+            Text = _text;
+        }
+        catch (Exception ex)
+        {
+            Cursor = Cursors.Default;
+            MsgBox.OpenFailed(this, ex.Message);
         }
     }
 
@@ -86,16 +84,9 @@ public partial class MainWindow : Form
         {
             try
             {
-                var options = new FileStreamOptions
-                {
-                    Mode = FileMode.Create
-                };
-                using var sw = new StreamWriter(x.FileName, Encoding.UTF8, options);
-                sw.Write(txtInput.Text);
-                sw.Flush();
-                sw.Close();
+                Storage.SaveText(x.FileName, txtInput.Text);
                 _lastDocumentFilename = x.FileName;
-                Text = $@"{Text} - {_lastDocumentFilename}";
+                Text = $@"{_text} - {_lastDocumentFilename}";
                 _unsaved = false;
             }
             catch (Exception ex)
@@ -118,7 +109,7 @@ public partial class MainWindow : Form
 
     private void timer1_Tick(object sender, EventArgs e)
     {
-        if (!_dirtyflag)
+        if (!_dirtyFlag)
             return;
 
         if (_task == null)
@@ -127,6 +118,7 @@ public partial class MainWindow : Form
         if (_task.IsCompletedSuccessfully)
         {
             txtOutput.Text = _lastResult;
+            lblStatus.Text = _lastMessage;
             _task.Dispose();
             _task = Task.Run(ProcessText);
         }
@@ -139,7 +131,7 @@ public partial class MainWindow : Form
             var binCompiler = new BinCompiler(txtInput.Text);
             var result = binCompiler.Compile();
             var s = new StringBuilder();
-
+            _lastMessage = $"{result.Length} bytes";
             for (var i = 0; i < result.Length; i++)
             {
                 s.Append(result[i].ToString("X2"));
@@ -151,6 +143,7 @@ public partial class MainWindow : Form
         catch (Exception e)
         {
             _lastResult = $"Failed to compile string!{Environment.NewLine}{e.Message}";
+            _lastMessage = e.Message;
         }
     }
 
@@ -161,7 +154,7 @@ public partial class MainWindow : Form
 
     private void txtInput_TextChanged(object sender, EventArgs e)
     {
-        _dirtyflag = true;
+        _dirtyFlag = true;
         _unsaved = true;
     }
 
@@ -182,5 +175,73 @@ public partial class MainWindow : Form
         txtInput.Text = "";
         Text = _text;
         _unsaved = false;
+    }
+
+    private void txtOutput_DragOver(object sender, DragEventArgs e)
+    {
+        var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
+        e.Effect = dataPresent ? DragDropEffects.Copy : DragDropEffects.None;
+        
+        if (dataPresent)
+            lblStatus.Text = @"Drop binary file here.";
+    }
+
+    private void txtOutput_DragDrop(object sender, DragEventArgs e)
+    {
+        var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
+        if (!dataPresent)
+            return;
+
+        Cursor = Cursors.WaitCursor;
+        try
+        {
+
+            var files = (string[])e.Data!.GetData(DataFormats.FileDrop);
+            if (files.Length <= 0)
+                return;
+            
+            txtInput.Text = Storage.LoadBinAsText(files[0]);
+            Cursor = Cursors.Default;
+            _unsaved = true;
+            _lastDocumentFilename = "";
+            Text = _text;
+        }
+        catch (Exception ex)
+        {
+            Cursor = Cursors.Default;
+            MsgBox.OpenFailed(this, ex.Message);
+        }
+    }
+
+    private void txtInput_DragOver(object sender, DragEventArgs e)
+    {
+        var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
+        e.Effect = dataPresent ? DragDropEffects.Copy : DragDropEffects.None;
+
+        if (dataPresent)
+            lblStatus.Text = @"Drop text file here.";
+    }
+
+    private void txtInput_DragDrop(object sender, DragEventArgs e)
+    {
+        var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
+        if (!dataPresent)
+            return;
+
+        try
+        {
+            var files = (string[])e.Data!.GetData(DataFormats.FileDrop);
+            if (files.Length <= 0)
+                return;
+
+            txtInput.Text = Storage.LoadText(files[0]);
+            _lastDocumentFilename = files[0];
+            Text = $@"{_text} - {_lastDocumentFilename}";
+            _unsaved = false;
+        }
+        catch (Exception ex)
+        {
+            MsgBox.OpenFailed(this, ex.Message);
+        }
     }
 }

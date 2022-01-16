@@ -33,6 +33,7 @@ namespace MkBin
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadTextDescriptionOfBinaryFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadBinaryFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveTextDescriptionOfBinaryFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +45,6 @@ namespace MkBin
             this.txtInput = new System.Windows.Forms.TextBox();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.newDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -76,6 +76,13 @@ namespace MkBin
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // newDocumentToolStripMenuItem
+            // 
+            this.newDocumentToolStripMenuItem.Name = "newDocumentToolStripMenuItem";
+            this.newDocumentToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
+            this.newDocumentToolStripMenuItem.Text = "New document";
+            this.newDocumentToolStripMenuItem.Click += new System.EventHandler(this.newDocumentToolStripMenuItem_Click);
             // 
             // loadTextDescriptionOfBinaryFileToolStripMenuItem
             // 
@@ -152,6 +159,7 @@ namespace MkBin
             // 
             this.txtInput.AcceptsReturn = true;
             this.txtInput.AcceptsTab = true;
+            this.txtInput.AllowDrop = true;
             this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtInput.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtInput.Location = new System.Drawing.Point(0, 0);
@@ -162,9 +170,12 @@ namespace MkBin
             this.txtInput.Size = new System.Drawing.Size(310, 473);
             this.txtInput.TabIndex = 0;
             this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
+            this.txtInput.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtInput_DragDrop);
+            this.txtInput.DragOver += new System.Windows.Forms.DragEventHandler(this.txtInput_DragOver);
             // 
             // txtOutput
             // 
+            this.txtOutput.AllowDrop = true;
             this.txtOutput.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtOutput.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -176,18 +187,13 @@ namespace MkBin
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtOutput.Size = new System.Drawing.Size(618, 473);
             this.txtOutput.TabIndex = 1;
+            this.txtOutput.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtOutput_DragDrop);
+            this.txtOutput.DragOver += new System.Windows.Forms.DragEventHandler(this.txtOutput_DragOver);
             // 
             // timer1
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // newDocumentToolStripMenuItem
-            // 
-            this.newDocumentToolStripMenuItem.Name = "newDocumentToolStripMenuItem";
-            this.newDocumentToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
-            this.newDocumentToolStripMenuItem.Text = "New document";
-            this.newDocumentToolStripMenuItem.Click += new System.EventHandler(this.newDocumentToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
