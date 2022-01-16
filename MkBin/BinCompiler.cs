@@ -10,10 +10,12 @@ namespace MkBin;
 public class BinCompiler
 {
     private readonly List<string> _parts = new();
+    private readonly AliasList _aliases = new();
 
     public BinCompiler(string source)
     {
         _parts.Clear();
+        _aliases.Clear();
 
         var rows = source.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
 
@@ -27,6 +29,13 @@ public class BinCompiler
             if (r.IndexOf('#') > -1)
                 r = r.Substring(0, r.IndexOf('#')).Trim();
 
+            var alias = AliasCompiler.Compile(r);
+            if (alias != null)
+            {
+                _aliases.Add(alias);
+                continue;
+            }
+
             var parts = Regex.Matches(r, @"[\""].+?[\""]|[^\s]+");
 
             foreach (Match part in parts)
@@ -37,30 +46,48 @@ public class BinCompiler
 
         foreach (var t in _parts)
         {
-            var p = t;
-            var times = 1;
+            var toEvaluate = new List<string>();
 
-            var match = Regex.Match(p, @"\*[0-9]+$");
-            if (match.Success)
+            if (_aliases.Has(t))
             {
-                var lastIndex = p.LastIndexOf("*", StringComparison.Ordinal);
-                var timesString = p.Substring(lastIndex + 1);
-                var valueString = p.Substring(0, lastIndex);
+                var v = _aliases.Get(t)!.Value;
+                var parts = Regex.Matches(v, @"[\""].+?[\""]|[^\s]+");
 
-                if (!int.TryParse(timesString, out times))
-                {
-                    throw new SystemException($"Failed to parse: {t}");
-                }
-
-                p = valueString;
+                foreach (Match part in parts)
+                    toEvaluate.Add(part.Value);
+            }
+            else
+            {
+                toEvaluate.Add(t);
             }
 
-            var isString = p.StartsWith("\"") && p.EndsWith("\"");
-                
-            for (var j = 0; j < times; j++)
-                newList.Add(
-                    (isString ? "\"" : "") + Regex.Replace(p, @"[^\w:/ ]", string.Empty) + (isString ? "\"" : "")
-                );
+            foreach (var iterator in toEvaluate)
+            {
+                var p = iterator;
+                var times = 1;
+
+                var match = Regex.Match(p, @"\*[0-9]+$");
+                if (match.Success)
+                {
+                    var lastIndex = p.LastIndexOf("*", StringComparison.Ordinal);
+                    var timesString = p.Substring(lastIndex + 1);
+                    var valueString = p.Substring(0, lastIndex);
+
+                    if (!int.TryParse(timesString, out times))
+                    {
+                        throw new SystemException($"Failed to parse: {t}");
+                    }
+
+                    p = valueString;
+                }
+
+                var isString = p.StartsWith("\"") && p.EndsWith("\"");
+
+                for (var j = 0; j < times; j++)
+                    newList.Add(
+                        (isString ? "\"" : "") + Regex.Replace(p, @"[^\w:/ ]", string.Empty) + (isString ? "\"" : "")
+                    );
+            }
         }
 
         _parts = newList;

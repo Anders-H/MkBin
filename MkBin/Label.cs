@@ -1,19 +1,13 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace MkBin;
 
-public class Label
+public class Label : EntityBase
 {
-    public string Name { get; }
     public BigInteger Address { get; }
 
-    public Label(string name, BigInteger address)
+    public Label(string name, BigInteger address) : base(name)
     {
-        Name = name;
         Address = address;
     }
-
-    public bool Is(string name) =>
-        string.Compare(Name, name, StringComparison.CurrentCultureIgnoreCase) == 0;
 }

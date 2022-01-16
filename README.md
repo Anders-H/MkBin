@@ -40,7 +40,7 @@ For a basic description of how the text-to-binary parser works:
 The rest of this document describes how the program converts a text file to a binary file.
 
 *A note on parsing: The separator between items (numbers, datatypes, etc.) is any whitespace (space, tab, new line...).
-The exeption is comments/remarks (`#`) that are terminated with new line.*
+The exeption is comments/remarks (`#`) and aliases. Remarks are terminated with new line and aliases can contain spaces but must be declared in a single line.*
 
 ## Datatypes
 
@@ -98,7 +98,7 @@ This will not work because 40.000 doesn't fit in a *short*: `short 10000 20000 3
 ## Other features
 
 Records are separated by whitespace, so spaces cannot be inserted arbitrarily. To write five `1`, type `1*5` and get `01 01 01 01 01`. `1 * 5` will produce an error.
-Remarks (`#`) are an exception since they are terminated by a line break.
+Remarks (`#`) and aliases are an exceptions since they are terminated by a line break.
 
 ### Address
 
@@ -123,6 +123,23 @@ Adr Adr
 **Output:**
 
 `64 65`
+
+### Alias
+
+An alias can contain spaces but must be declaired on a single line. To create an alias named `OneTwoThree` for the byte values `1`, `2` and `3`, use `Alias:OneTwoThree 1 2 3` on a single row. Example:
+
+**Input:**
+```
+# Create an alias named X that represents 1, 2 and 3 in byte format.
+Alias:X byte 1 2 3
+
+# Use the alias X twice.
+X X
+```
+
+**Output:**
+
+`01 02 03 01 02 03`
 
 ### Labels
 
