@@ -121,6 +121,8 @@ Adr Adr
 
 `64 65`
 
+*`SetAdr` can only be used once per file.*
+
 ### Alias
 
 An alias can contain spaces but must be declaired on a single line. To create an alias named `OneTwoThree` for the byte values `1`, `2` and `3`, use `Alias:OneTwoThree 1 2 3` on a single row. Example:
@@ -168,6 +170,8 @@ Lbl:SomeName
 **Output:**
 
 `01 01 01 01 01 01 05 08 02 08`
+
+*`SetLbl` can occur without `SetAdr` but not before `SetAdr`.*
 
 ### Multiply
 

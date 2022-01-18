@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Threading;
+using MkBin.Tokens;
 
 namespace MkBin;
 
@@ -101,6 +104,67 @@ public class BinCompiler
         var labels = new LabelList();
         var bytes = new List<byte>();
 
+        // Pass 1: Create the tokens.
+        var tokens = new TokenList();
+        foreach (var p in _parts.Select(part => part.Trim()))
+        {
+            if (string.IsNullOrWhiteSpace(p))
+                continue;
+
+            var st = StringCompiler.GetToken(p);
+            if (st != null)
+            {
+                tokens.Add(st);
+                continue;
+            }
+
+            var nu = NumberCompiler.GetToken(p, currentType);
+            if (nu != null)
+            {
+                tokens.Add(nu);
+                continue;
+            }
+
+            var cw = ControlWordCompiler.GetToken(p);
+            if (cw != null)
+            {
+                tokens.Add(cw);
+                continue;
+            }
+
+            var setadr = AddressCompiler.GetSetToken(p, currentType);
+            if (setadr != null)
+            {
+                tokens.Add(setadr);
+                continue;
+            }
+
+            var getadr = AddressCompiler.GetGetToken(p, addressType);
+            if (getadr != null)
+            {
+                tokens.Add(getadr);
+                continue;
+            }
+
+            var setlbl = LabelCompiler.GetSetToken(p, ref labels);
+            if (setlbl != null)
+            {
+                tokens.Add(setlbl);
+                continue;
+            }
+
+            var getlbl = LabelCompiler.GetGetToken(p, ref labels, addressType);
+            if (getlbl != null)
+            {
+                tokens.Add(getlbl);
+                continue;
+            }
+        }
+
+        // Pass 2: Calculate the byte lengths.
+
+
+        // Pass 3: Generate the bytes.
         foreach (var p in _parts.Select(part => part.Trim()))
         {
             if (string.IsNullOrWhiteSpace(p))
