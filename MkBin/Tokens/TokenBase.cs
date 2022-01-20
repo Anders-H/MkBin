@@ -6,4 +6,11 @@ public abstract class TokenBase
 {
     public BigInteger StartAddress { get; set; }
     public abstract int ByteLength { get; }
+    public string Source { get; }
+
+    protected TokenBase(string source)
+    {
+        Source = source;
+    }
+
 }

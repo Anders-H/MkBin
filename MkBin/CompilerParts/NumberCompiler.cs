@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Numerics;
+using MkBin.Tokens;
 
-namespace MkBin;
+namespace MkBin.CompilerParts;
 
 internal class NumberCompiler
 {
@@ -17,12 +19,18 @@ internal class NumberCompiler
         return false;
     }
 
+    public static NumberToken? GetToken(string input, NumberType numberType) =>
+        new (
+            BigInteger.Parse(input),
+            numberType
+        );
+
     private static bool IsNumeric(string s) =>
         s.StartsWith("-")
             ? long.TryParse(s, out _)
             : ulong.TryParse(s, out _);
 
-    internal static void WriteNumeric(string n, NumberType type, ref List<byte> bytes)
+    public static void WriteNumeric(string n, NumberType type, ref List<byte> bytes)
     {
         try
         {

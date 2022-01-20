@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using MkBin.Tokens;
 
 namespace MkBin.CompilerParts;
 
@@ -15,6 +16,15 @@ internal class ControlWordCompiler
         }
 
         return false;
+    }
+
+    public static ControlWordToken? GetToken(string input)
+    {
+        var n = GetNumberTypeFromControlWord(input);
+        
+        return n == null
+            ? null
+            : new ControlWordToken(n.Value);
     }
 
     private static NumberType? GetNumberTypeFromControlWord(string n)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using MkBin.Tokens;
 
 namespace MkBin.CompilerParts;
 
@@ -41,6 +42,27 @@ public static class AddressCompiler
         return false;
     }
 
+    public static SetAddressToken? GetSetToken(string input, NumberType nuberType)
+    {
+        var i = input.ToLower();
+        var match = Regex.Match(i, @"^setadr:([0-9]+)$");
+
+        if (match.Success)
+        {
+            try
+            {
+                var v = BigInteger.Parse(match.Groups[1].Value);
+                return new SetAddressToken(input, v, nuberType);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        return null;
+    }
+
     public static bool CompileGet(string input, NumberType currentType, BigInteger currentValue, ref List<byte> output)
     {
         if (string.Compare(input, "adr", StringComparison.CurrentCultureIgnoreCase) != 0)
@@ -49,4 +71,9 @@ public static class AddressCompiler
         NumberCompiler.WriteNumeric(currentValue.ToString(), currentType, ref output);
         return true;
     }
+
+    public static GetAddressToken? GetGetToken(string input, NumberType numberType) =>
+        string.Compare(input, "adr", StringComparison.CurrentCultureIgnoreCase) == 0
+            ? new GetAddressToken(input, numberType)
+            : null;
 }

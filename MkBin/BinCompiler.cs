@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading;
 using MkBin.Tokens;
 
 namespace MkBin;
@@ -132,39 +130,41 @@ public class BinCompiler
                 continue;
             }
 
-            var setadr = AddressCompiler.GetSetToken(p, currentType);
-            if (setadr != null)
+            var setAdr = AddressCompiler.GetSetToken(p, currentType);
+            if (setAdr != null)
             {
-                tokens.Add(setadr);
+                tokens.Add(setAdr);
                 continue;
             }
 
-            var getadr = AddressCompiler.GetGetToken(p, addressType);
-            if (getadr != null)
+            var getAdr = AddressCompiler.GetGetToken(p, addressType);
+            if (getAdr != null)
             {
-                tokens.Add(getadr);
+                tokens.Add(getAdr);
                 continue;
             }
 
-            var setlbl = LabelCompiler.GetSetToken(p, ref labels);
-            if (setlbl != null)
+            var setLbl = LabelCompiler.GetSetToken(p, ref labels);
+            if (setLbl != null)
             {
-                tokens.Add(setlbl);
+                tokens.Add(setLbl);
                 continue;
             }
 
-            var getlbl = LabelCompiler.GetGetToken(p, ref labels, addressType);
-            if (getlbl != null)
+            var getLbl = LabelCompiler.GetGetToken(p, ref labels, addressType);
+            if (getLbl != null)
             {
-                tokens.Add(getlbl);
+                tokens.Add(getLbl);
                 continue;
             }
         }
 
-        // Pass 2: Calculate the byte lengths.
+        // Pass 2: Normalize the addresses.
+
+        // Pass 3: Calculate the byte lengths.
 
 
-        // Pass 3: Generate the bytes.
+        // Pass 4: Generate the bytes.
         foreach (var p in _parts.Select(part => part.Trim()))
         {
             if (string.IsNullOrWhiteSpace(p))

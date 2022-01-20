@@ -7,7 +7,7 @@ public class StringToken : TokenBase
     public override int ByteLength =>
         Value.Length;
 
-    public StringToken(string value)
+    public StringToken(string source, string value) : base(source)
     {
         Value = value;
     }

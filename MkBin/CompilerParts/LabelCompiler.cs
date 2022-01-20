@@ -29,6 +29,12 @@ namespace MkBin.CompilerParts
             return false;
         }
 
+        public static SetLabelToken? GetSetToken(string source)
+        {
+            var i = input.ToLower();
+            var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
+        }
+
         public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, ref List<byte> output)
         {
             var i = input.ToLower();
