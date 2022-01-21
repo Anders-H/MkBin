@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MkBin.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -29,10 +30,16 @@ namespace MkBin.CompilerParts
             return false;
         }
 
-        public static SetLabelToken? GetSetToken(string source)
+        public static SetLabelToken? GetSetToken(string input)
         {
             var i = input.ToLower();
             var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
+            if (match.Success)
+            {
+
+            }
+
+            return null;
         }
 
         public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, ref List<byte> output)
