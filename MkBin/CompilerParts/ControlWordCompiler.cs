@@ -24,7 +24,7 @@ internal class ControlWordCompiler
         
         return n == null
             ? null
-            : new ControlWordToken(n.Value);
+            : new ControlWordToken(input, n.Value);
     }
 
     private static NumberType? GetNumberTypeFromControlWord(string n)

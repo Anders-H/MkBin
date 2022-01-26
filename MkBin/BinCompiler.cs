@@ -144,14 +144,14 @@ public class BinCompiler
                 continue;
             }
 
-            var setLbl = LabelCompiler.GetSetToken(p, ref labels);
+            var setLbl = LabelCompiler.GetSetToken(p);
             if (setLbl != null)
             {
                 tokens.Add(setLbl);
                 continue;
             }
 
-            var getLbl = LabelCompiler.GetGetToken(p, ref labels, addressType);
+            var getLbl = LabelCompiler.GetGetToken(p, addressType);
             if (getLbl != null)
             {
                 tokens.Add(getLbl);
@@ -159,7 +159,7 @@ public class BinCompiler
             }
         }
 
-        // Pass 2: Normalize the addresses.
+        // Pass 2: Evaluate the addresses.
 
         // Pass 3: Calculate the byte lengths.
 

@@ -34,9 +34,11 @@ namespace MkBin.CompilerParts
         {
             var i = input.ToLower();
             var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
+            
             if (match.Success)
             {
-
+                var v = match.Groups[1].Value.Trim();
+                return new SetLabelToken(input, v);
             }
 
             return null;
@@ -44,8 +46,7 @@ namespace MkBin.CompilerParts
 
         public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, ref List<byte> output)
         {
-            var i = input.ToLower();
-            var match = Regex.Match(i, @"^lbl:([a-z0-9]+)$");
+            var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
 
             if (match.Success)
             {
@@ -59,6 +60,16 @@ namespace MkBin.CompilerParts
             }
 
             return false;
+        }
+
+        public static GetLabelToken? GetGetToken(string input, NumberType addressType)
+        {
+            var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
+
+            if (match.Success)
+                return new GetLabelToken(input, addressType);
+
+            return null;
         }
     }
 }

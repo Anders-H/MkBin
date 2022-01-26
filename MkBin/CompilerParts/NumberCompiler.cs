@@ -21,6 +21,7 @@ internal class NumberCompiler
 
     public static NumberToken? GetToken(string input, NumberType numberType) =>
         new (
+            input,
             BigInteger.Parse(input),
             numberType
         );

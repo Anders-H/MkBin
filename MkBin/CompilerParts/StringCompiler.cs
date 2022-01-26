@@ -27,7 +27,7 @@ public class StringCompiler
                 Encoding.UTF8.GetBytes(input[1..^1])
             );
 
-            return new StringToken(value);
+            return new StringToken(input, value);
         }
 
         return null;
