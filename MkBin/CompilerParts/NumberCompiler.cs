@@ -19,12 +19,13 @@ internal class NumberCompiler
         return false;
     }
 
-    public static NumberToken? GetToken(string input, NumberType numberType) =>
-        new (
-            input,
-            BigInteger.Parse(input),
-            numberType
-        );
+    public static NumberToken? GetToken(string input, NumberType numberType)
+    {
+        if (BigInteger.TryParse(input, out var num))
+            return new(input, num, numberType);
+
+        return null;
+    }
 
     private static bool IsNumeric(string s) =>
         s.StartsWith("-")

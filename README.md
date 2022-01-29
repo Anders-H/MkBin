@@ -53,8 +53,8 @@ to byte, use the keyword `byte`.
 `1 int 1 1` gives nine bytes, because the first 1 requires one byte and
 the last two bytes requires four bytes each: `01 01 00 00 00 01 00 00 00`.
 
-*Before any datatype is found in the text document, numbers are assumed to be bytes and any address are assumed to be
-unsigned short (16-bit). The datatype directives affect both. Labels are always of the same type as the address.*
+*Before any datatype is found in the text document, numbers and addresses are assumed to be bytes.
+The datatype directives affect both. Labels are always of the same type as the address.*
 
 ## Examples
 
@@ -102,7 +102,7 @@ Remarks (`#`) and aliases are an exceptions since they are terminated by a line 
 
 ### Address
 
-An address is a location number that can be stored as any numeric datatype. The current datatype will be used (`byte` if no type has been specified yet) for storing.
+An address is a location number that can be stored as any numeric datatype. The current datatype will be used (`ushort` if no type has been specified yet) for storing.
 When recalled, it is always recalled in the type it was stored, regardless of current the type. The passed number of bytes will be added, so a document larger than 256 bytes cannot have an address stored in byte format.
 To store an address, use `SetAdr:[n]` where `n` is the address (i.e. `SetAdr:2048`). To recall the stored address, use `Adr`.
 The following example stores an address in `byte` format, and recalls it twice.
@@ -121,7 +121,7 @@ Adr Adr
 
 `64 65`
 
-*`SetAdr` can only be used once per file.*
+*`SetAdr` can only be used once per file and affects the whole file.*
 
 ### Alias
 
@@ -150,7 +150,6 @@ The current datatype will not affect `SetLbl` or `Lbl`, it relies on the datatyp
 
 ```
 # Set start address in ushort format
-ushort
 SetAdr:2048
 
 # Write three bytes (default type for numbers) and store a label at 2050
@@ -170,8 +169,6 @@ Lbl:SomeName
 **Output:**
 
 `01 01 01 01 01 01 05 08 02 08`
-
-*`SetLbl` can occur without `SetAdr` but not before `SetAdr`.*
 
 ### Multiply
 

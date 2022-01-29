@@ -22,7 +22,7 @@ public class BinCompiler
 
         foreach (var row in rows)
         {
-            var r = (row ?? "").Trim();
+            var r = row.Trim();
 
             if (r.StartsWith('#'))
                 continue;
@@ -97,7 +97,7 @@ public class BinCompiler
     public byte[] Compile()
     {
         var currentType = NumberType.ByteType;
-        var addressType = currentType;
+        var addressType = NumberType.UShortType;
         BigInteger currentAddress = 0;
         var labels = new LabelList();
         var bytes = new List<byte>();
@@ -157,11 +157,75 @@ public class BinCompiler
                 tokens.Add(getLbl);
                 continue;
             }
+
+            throw new SystemException($@"Failed to parse: {p}");
         }
 
         // Pass 2: Evaluate the addresses.
+        var startAddress = tokens.GetStartAddress();
+        if (startAddress is byte b)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = b;
+                b += (byte)token.ByteLength;
+            }
+        }
+        else if (startAddress is short s)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = s;
+                s += (byte)token.ByteLength;
+            }
+        }
+        else if (startAddress is ushort us)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = us;
+                us += (byte)token.ByteLength;
+            }
+        }
+        else if (startAddress is int i)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = i;
+                i += (byte)token.ByteLength;
+            }
+        }
+        else if (startAddress is uint ui)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = ui;
+                ui += (byte)token.ByteLength;
+            }
+        }
+        else if (startAddress is long l)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = l;
+                l += (byte)token.ByteLength;
+            }
+        }
+        else if (startAddress is ulong ul)
+        {
+            foreach (var token in tokens)
+            {
+                token.StartAddress = ul;
+                ul += (byte)token.ByteLength;
+            }
+        }
+        else
+        {
+            throw new SystemException($@"Unknown address type: {startAddress.GetType().Name}");
+        }
 
-        // Pass 3: Calculate the byte lengths.
+
+        // Pass 3: Evaluate the labels.
 
 
         // Pass 4: Generate the bytes.

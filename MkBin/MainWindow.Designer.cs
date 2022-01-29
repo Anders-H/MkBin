@@ -39,15 +39,18 @@ namespace MkBin
             this.saveTextDescriptionOfBinaryFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveBinaryFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.decToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.autoUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -122,6 +125,34 @@ namespace MkBin
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(263, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hexToolStripMenuItem,
+            this.decToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.autoUpdateToolStripMenuItem,
+            this.updateNowToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "&View";
+            // 
+            // hexToolStripMenuItem
+            // 
+            this.hexToolStripMenuItem.Checked = true;
+            this.hexToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.hexToolStripMenuItem.Name = "hexToolStripMenuItem";
+            this.hexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hexToolStripMenuItem.Text = "Hex";
+            this.hexToolStripMenuItem.Click += new System.EventHandler(this.hexToolStripMenuItem_Click);
+            // 
+            // decToolStripMenuItem
+            // 
+            this.decToolStripMenuItem.Name = "decToolStripMenuItem";
+            this.decToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.decToolStripMenuItem.Text = "Dec";
+            this.decToolStripMenuItem.Click += new System.EventHandler(this.decToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -199,30 +230,27 @@ namespace MkBin
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // viewToolStripMenuItem
+            // toolStripMenuItem1
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hexToolStripMenuItem,
-            this.decToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "&View";
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
-            // hexToolStripMenuItem
+            // autoUpdateToolStripMenuItem
             // 
-            this.hexToolStripMenuItem.Checked = true;
-            this.hexToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.hexToolStripMenuItem.Name = "hexToolStripMenuItem";
-            this.hexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.hexToolStripMenuItem.Text = "Hex";
-            this.hexToolStripMenuItem.Click += new System.EventHandler(this.hexToolStripMenuItem_Click);
+            this.autoUpdateToolStripMenuItem.Checked = true;
+            this.autoUpdateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoUpdateToolStripMenuItem.Name = "autoUpdateToolStripMenuItem";
+            this.autoUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.autoUpdateToolStripMenuItem.Text = "Auto update";
+            this.autoUpdateToolStripMenuItem.Click += new System.EventHandler(this.autoUpdateToolStripMenuItem_Click);
             // 
-            // decToolStripMenuItem
+            // updateNowToolStripMenuItem
             // 
-            this.decToolStripMenuItem.Name = "decToolStripMenuItem";
-            this.decToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.decToolStripMenuItem.Text = "Dec";
-            this.decToolStripMenuItem.Click += new System.EventHandler(this.decToolStripMenuItem_Click);
+            this.updateNowToolStripMenuItem.Enabled = false;
+            this.updateNowToolStripMenuItem.Name = "updateNowToolStripMenuItem";
+            this.updateNowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.updateNowToolStripMenuItem.Text = "Update now";
+            this.updateNowToolStripMenuItem.Click += new System.EventHandler(this.updateNowToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -274,5 +302,8 @@ namespace MkBin
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hexToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem decToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem autoUpdateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateNowToolStripMenuItem;
     }
 }

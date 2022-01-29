@@ -125,7 +125,7 @@ public partial class MainWindow : Form
         }
     }
 
-    private void ProcessText()
+    private bool ProcessText()
     {
         try
         {
@@ -141,11 +141,13 @@ public partial class MainWindow : Form
             }
 
             _lastResult = s.ToString();
+            return true;
         }
         catch (Exception e)
         {
             _lastResult = $"Failed to compile string!{Environment.NewLine}{e.Message}";
             _lastMessage = e.Message;
+            return false;
         }
     }
 
@@ -261,5 +263,22 @@ public partial class MainWindow : Form
         hexToolStripMenuItem.Checked = false;
         _hex = false;
         _dirtyFlag = true;
+    }
+
+    private void autoUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        autoUpdateToolStripMenuItem.Checked = !autoUpdateToolStripMenuItem.Checked;
+        updateNowToolStripMenuItem.Enabled = !autoUpdateToolStripMenuItem.Checked;
+        timer1.Enabled = autoUpdateToolStripMenuItem.Checked;
+    }
+
+    private void updateNowToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        Cursor = Cursors.WaitCursor;
+        var result = ProcessText();
+        txtOutput.Text = _lastResult;
+        lblStatus.Text = _lastMessage;
+        Refresh();
+        Cursor = Cursors.Default;
     }
 }
