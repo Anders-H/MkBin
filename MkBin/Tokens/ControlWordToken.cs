@@ -1,4 +1,6 @@
-﻿namespace MkBin.Tokens;
+﻿using System;
+
+namespace MkBin.Tokens;
 
 internal class ControlWordToken : TokenBase
 {
@@ -11,4 +13,7 @@ internal class ControlWordToken : TokenBase
     {
         Value = value;
     }
+
+    public override byte[] GetBytes() =>
+        Array.Empty<byte>();
 }

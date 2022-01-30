@@ -97,7 +97,7 @@ This will not work because 40.000 doesn't fit in a *short*: `short 10000 20000 3
 
 ## Other features
 
-Records are separated by whitespace, so spaces cannot be inserted arbitrarily. To write five `1`, type `1*5` and get `01 01 01 01 01`. `1 * 5` will produce an error.
+Records are separated by any whitespace, so spaces cannot be inserted arbitrarily. To write five `1`, type `1*5` and get `01 01 01 01 01`. `1 * 5` will produce an error.
 Remarks (`#`) and aliases are an exceptions since they are terminated by a line break.
 
 ### Address
@@ -139,6 +139,8 @@ X X
 **Output:**
 
 `01 02 03 01 02 03`
+
+*Aliases cannot be recursive.*
 
 ### Labels
 

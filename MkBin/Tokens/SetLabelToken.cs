@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace MkBin.Tokens;
 
@@ -14,4 +15,7 @@ public class SetLabelToken : TokenBase
 
     public override int ByteLength =>
         0;
+
+    public override byte[] GetBytes() =>
+        Array.Empty<byte>();
 }

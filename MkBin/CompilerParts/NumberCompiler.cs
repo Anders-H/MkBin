@@ -72,4 +72,41 @@ internal class NumberCompiler
             throw new Exception($"Failed to fit the value {n} into type {type}");
         }
     }
+
+    public static void WriteNumeric(BigInteger value, NumberType type, ref List<byte> bytes)
+    {
+        try
+        {
+            switch (type)
+            {
+                case NumberType.ByteType:
+                    bytes.Add((byte)value);
+                    break;
+                case NumberType.ShortType:
+                    bytes.AddRange(BitConverter.GetBytes((short)value));
+                    break;
+                case NumberType.UShortType:
+                    bytes.AddRange(BitConverter.GetBytes((ushort)value));
+                    break;
+                case NumberType.IntType:
+                    bytes.AddRange(BitConverter.GetBytes((int)value));
+                    break;
+                case NumberType.UIntType:
+                    bytes.AddRange(BitConverter.GetBytes((uint)value));
+                    break;
+                case NumberType.LongType:
+                    bytes.AddRange(BitConverter.GetBytes((long)value));
+                    break;
+                case NumberType.ULongType:
+                    bytes.AddRange(BitConverter.GetBytes((ulong)value));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+        catch
+        {
+            throw new Exception($"Failed to fit the value {value} into type {type}");
+        }
+    }
 }

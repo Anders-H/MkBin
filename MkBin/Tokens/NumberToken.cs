@@ -24,4 +24,11 @@ public class NumberToken : TokenBase
             return bytes.Count;
         }
     }
+
+    public override byte[] GetBytes()
+    {
+        var result = new List<byte>();
+        NumberCompiler.WriteNumeric(Value, NumberType, ref result);
+        return result.ToArray();
+    }
 }

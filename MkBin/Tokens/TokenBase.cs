@@ -13,4 +13,5 @@ public abstract class TokenBase
         Source = source;
     }
 
+    public abstract byte[] GetBytes();
 }

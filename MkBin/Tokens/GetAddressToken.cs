@@ -7,7 +7,7 @@ namespace MkBin.Tokens;
 public class GetAddressToken : TokenBase
 {
     public BigInteger Value { get; set; }
-    public NumberType NumberType { get; }
+    public NumberType NumberType { get; set; }
 
     public GetAddressToken(string source, NumberType numberType) : base(source)
     {
@@ -23,5 +23,12 @@ public class GetAddressToken : TokenBase
             NumberCompiler.WriteNumeric(Value.ToString(), NumberType, ref bytes);
             return bytes.Count;
         }
+    }
+
+    public override byte[] GetBytes()
+    {
+        var result = new List<byte>();
+        NumberCompiler.WriteNumeric(Value, NumberType, ref result);
+        return result.ToArray();
     }
 }
