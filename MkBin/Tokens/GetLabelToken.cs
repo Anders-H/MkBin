@@ -6,11 +6,13 @@ namespace MkBin.Tokens;
 
 public class GetLabelToken : TokenBase
 {
-    public BigInteger Value { get; set; }
+    public string LabelName { get; }
     public NumberType NumberType { get; }
+    public BigInteger Value { get; set; }
 
-    public GetLabelToken(string source, NumberType numberType) : base(source)
+    public GetLabelToken(string source, string labelName, NumberType numberType) : base(source)
     {
+        LabelName = labelName;
         Value = 0;
         NumberType = numberType;
     }

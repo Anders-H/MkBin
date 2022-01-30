@@ -98,9 +98,6 @@ public class BinCompiler
     {
         var currentType = NumberType.ByteType;
         var addressType = NumberType.UShortType;
-        BigInteger currentAddress = 0;
-        var labels = new LabelList();
-        var bytes = new List<byte>();
 
         // Pass 1: Create the tokens.
         var tokens = new TokenList();
@@ -163,6 +160,7 @@ public class BinCompiler
 
         // Pass 2: Evaluate the addresses.
         var startAddress = tokens.GetStartAddress();
+
         if (startAddress is byte b)
         {
             foreach (var token in tokens)
@@ -224,42 +222,25 @@ public class BinCompiler
             throw new SystemException($@"Unknown address type: {startAddress.GetType().Name}");
         }
 
-
         // Pass 3: Evaluate the labels.
+        foreach (var token in tokens)
+        {
+            if (token is SetLabelToken slt && tokens.GetLabelCount(slt.LabelName) > 0)
+                throw new SystemException($@"Label declared more than once: {slt.LabelName}");
+            else if (token is GetLabelToken glt && tokens.GetLabelCount(glt.LabelName) < 1)
+                throw new SystemException($@"Label not found: {glt.LabelName}");
+        }
 
+        foreach (var token in tokens)
+            if (token is GetLabelToken glt)
+                glt.Value = tokens.GetAddressFromLabel(glt.LabelName);
 
         // Pass 4: Generate the bytes.
-        foreach (var p in _parts.Select(part => part.Trim()))
-        {
-            if (string.IsNullOrWhiteSpace(p))
-                continue;
+        var bytes = new List<byte>();
 
-            if (StringCompiler.Compile(p, ref bytes))
-                continue;
+        foreach (var token in tokens)
+            bytes.AddRange(token.GetBytes());
 
-            if (NumberCompiler.Compile(p, currentType, ref bytes))
-                continue;
-
-            if (ControlWordCompiler.Compile(p, ref currentType))
-                continue;
-
-            if (AddressCompiler.CompileSet(p, currentType, ref currentAddress))
-            {
-                addressType = currentType;
-                continue;
-            }
-
-            if (AddressCompiler.CompileGet(p, addressType, currentAddress + bytes.Count - 1, ref bytes))
-                continue;
-
-            if (LabelCompiler.CompileSet(p, ref labels, currentAddress + bytes.Count - 1))
-                continue;
-
-            if (LabelCompiler.CompileGet(p, ref labels, addressType, ref bytes))
-                continue;
-
-            throw new Exception($"Unknown token: {p}");
-        }
         return bytes.ToArray();
     }
 }

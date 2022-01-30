@@ -67,7 +67,7 @@ namespace MkBin.CompilerParts
             var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
 
             if (match.Success)
-                return new GetLabelToken(input, addressType);
+                return new GetLabelToken(input, match.Groups[1].Value, addressType);
 
             return null;
         }
