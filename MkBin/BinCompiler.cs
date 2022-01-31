@@ -50,6 +50,8 @@ public class BinCompiler
             var cw = ControlWordCompiler.GetToken(p);
             if (cw != null)
             {
+                currentType = cw.Value;
+                addressType = cw.Value;
                 tokens.Add(cw);
                 continue;
             }

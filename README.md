@@ -101,93 +101,18 @@ and `ulong` (64-bit unsigned).
 
 `01 02 00 03 00 00 00`
 
+### Start address
 
-
-## Examples
-
-Here is a couple of examples of inputs and a text representation of the output.
-
-### Three 16-bit numbers
-
-This example shows how three 16-bit numbers can be represented as text.
+An address is a given value, the start address, plus the sum of all bytes that have been written so far. A start address is set using `SetAdr:n` where n is a unsigned 16-bit value (if no other type is specified).
+The current address is recalled using `Adr`.
 
 **Input:**
 
-`short 1 2 3`
+`SetAdr:4096 Adr`
 
 **Output:**
 
-`01 00 02 00 03 00`
-
-### A machine code program
-
-This example is a complete machine code program for the Commodore 64 that changes the background color to black.
-It is located in memory at 4096, so if loaded to a Commodore 64, it can be started using `SYS 4096`.
-
-**Input:**
-
-```
-ushort 4096 byte 169 0
-141 ushort 53281
-byte 96
-```
-
-**Output:**
-
-`00 10 A9 00 8D 21 D0 60`
-
-### Incorrect examples
-
-This will not work because 300 doesn't fit in a *byte*: `100 200 300`
-
-This will not work because 40.000 doesn't fit in a *short*: `short 10000 20000 30000 40000`
-
-## Other features
-
-Records are separated by any whitespace, so spaces cannot be inserted arbitrarily. To write five `1`, type `1*5` and get `01 01 01 01 01`. `1 * 5` will produce an error.
-Remarks (`#`) and aliases are an exceptions since they are terminated by a line break.
-
-### Address
-
-An address is a location number that can be stored as any numeric datatype. The current datatype will be used (`ushort` if no type has been specified yet) for storing.
-When recalled, it is always recalled in the type it was stored, regardless of current the type. The passed number of bytes will be added, so a document larger than 256 bytes cannot have an address stored in byte format.
-To store an address, use `SetAdr:[n]` where `n` is the address (i.e. `SetAdr:2048`). To recall the stored address, use `Adr`.
-The following example stores an address in `byte` format, and recalls it twice.
-
-**Input:**
-
-```
-# The start address of the file is 100 in byte format
-SetAdr:100
-
-# This will give the current address twice
-Adr Adr
-```
-
-**Output:**
-
-`64 65`
-
-*`SetAdr` can only be used once per file and affects the whole file.*
-
-### Alias
-
-An alias can contain spaces but must be declaired on a single line. To create an alias named `OneTwoThree` for the byte values `1`, `2` and `3`, use `Alias:OneTwoThree 1 2 3` on a single row. Example:
-
-**Input:**
-```
-# Create an alias named X that represents 1, 2 and 3 in byte format.
-Alias:X byte 1 2 3
-
-# Use the alias X twice.
-X X
-```
-
-**Output:**
-
-`01 02 03 01 02 03`
-
-*Aliases cannot be recursive.*
+`00 10`
 
 ### Labels
 
@@ -219,6 +144,44 @@ Lbl:SomeName
 
 `01 01 01 01 01 01 05 08 02 08`
 
+### Aliases
+
+Records are separated by any whitespace, so spaces cannot be inserted arbitrarily. To write five `1`, type `1*5` and get `01 01 01 01 01`. `1 * 5` will produce an error.
+Comments/remarks (`#`) and aliases are an exceptions since they are terminated by a line break.
+
+An alias can contain spaces but must be declaired on a single line. To create an alias named `OneTwoThree` for the byte values `1`, `2` and `3`, use `Alias:OneTwoThree 1 2 3` on a single row. Example:
+
+**Input:**
+```
+# Create an alias named X that represents 1, 2 and 3 in byte format.
+Alias:X byte 1 2 3
+
+# Use the alias X twice.
+X X
+```
+
+**Output:**
+
+`01 02 03 01 02 03`
+
+*Aliases cannot be recursive.*
+
+### Comments
+
+Like aliases, comments/remarks are terminated by a line break. Anything after `#` on a line will be ignored by the compiler.
+
+**Input:**
+
+```
+# This line does nothing
+1 2 3 # Nothing more will be parsed on this line
+4
+```
+
+**Output:**
+
+`01 02 03 04`
+
 ### Multiply
 
 To repeat the last digit a given number of times, append * directly followd by the number of times you want to repeat. Example:
@@ -233,18 +196,62 @@ To repeat the last digit a given number of times, append * directly followd by t
 
 `FF 02 02 02 FF`
 
-### Remarks
+## Examples
 
-A remark (`#`) will cause the parser to ignore everything until the next line break. Example:
+Here is a couple of examples of inputs and a text representation of the output.
+
+### Three 16-bit numbers
+
+This example shows how three 16-bit numbers can be represented as text.
+
+**Input:**
+
+`short 1 2 3`
+
+**Output:**
+
+`01 00 02 00 03 00`
+
+### A machine code program
+
+This example is a complete machine code program for the Commodore 64 that changes the background color to black.
+It is located in memory at 4096, so if loaded to a Commodore 64, it can be started using `SYS 4096`.
 
 **Input:**
 
 ```
-# This line does nothing
-1 2 3 # Nothing more will be parsed on this line
-4
+SetAdr:4096
+byte 169 0
+141 ushort 53281
+byte 96
 ```
 
 **Output:**
 
-`01 02 03 04`
+`00 10 A9 00 8D 21 D0 60`
+
+The same example, with aliases:
+
+**Input:**
+
+```
+Alias:SetStartAddress SetAdr:4096 Adr
+Alias:LDA byte 196
+Alias:STA byte 141 ushort
+Alias:RTS byte 96
+
+SetStartAddress
+LDA 0
+STA 53281
+RTS
+```
+
+**Output:**
+
+`00 10 A9 00 8D 21 D0 60`
+
+### Incorrect examples
+
+This will not work because 300 doesn't fit in a *byte*: `100 200 300`
+
+This will not work because 40.000 doesn't fit in a *short*: `short 10000 20000 30000 40000`
