@@ -9,7 +9,7 @@ But it can be used by anyone who wants to represent any binary data as text.
 - When started with `-nohide`, the GUI will show and the console window will remain visible.
 - The program also supports command line jobs and a "prompt mode".
 
-![Screenshot](https://imghost.winsoft.se/upload/690711641999278Untitled-1.jpg)
+![Screenshot](https://imghost.winsoft.se/upload/792971643660105mkbin.jpg)
 
 The program takes a source file and a target file. The source file is a text representation
 of a binary file, and the target file is the binary file that will be written.
