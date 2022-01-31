@@ -6,7 +6,6 @@ namespace MkBin.Tokens;
 public class SetLabelToken : TokenBase
 {
     public string LabelName { get; }
-    public BigInteger Address { get; set; }
 
     public SetLabelToken(string source, string labelName) : base(source)
     {
@@ -18,4 +17,8 @@ public class SetLabelToken : TokenBase
 
     public override byte[] GetBytes() =>
         Array.Empty<byte>();
+
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString}label ""{LabelName}"" points here.";
 }

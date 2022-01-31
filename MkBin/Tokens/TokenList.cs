@@ -11,10 +11,10 @@ public class TokenList : List<TokenBase>
     {
         var found = new List<SetAddressToken>();
         var type = NumberType.UShortType;
-
+        
         foreach (var t in this)
         {
-            if (t is ControlWordToken cwt)
+            if (t is ControlWordToken cwt && found.Count <= 0)
             {
                 type = cwt.Value;
                 continue;
@@ -43,25 +43,25 @@ public class TokenList : List<TokenBase>
             }
 
             if (sat.NumberType == NumberType.ByteType)
-                return (byte)sat.StartAddress;
+                return (byte)sat.Value;
 
             if (sat.NumberType == NumberType.ShortType)
-                return (short)sat.StartAddress;
+                return (short)sat.Value;
 
             if (sat.NumberType == NumberType.UShortType)
-                return (ushort)sat.StartAddress;
+                return (ushort)sat.Value;
 
             if (sat.NumberType == NumberType.IntType)
-                return (int)sat.StartAddress;
+                return (int)sat.Value;
 
             if (sat.NumberType == NumberType.UIntType)
-                return (uint)sat.StartAddress;
+                return (uint)sat.Value;
 
             if (sat.NumberType == NumberType.LongType)
-                return (long)sat.StartAddress;
+                return (long)sat.Value;
 
             if (sat.NumberType == NumberType.ULongType)
-                return (ulong)sat.StartAddress;
+                return (ulong)sat.Value;
 
             throw new SystemException(@"Unknown address type.");
         }

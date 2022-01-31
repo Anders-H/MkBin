@@ -40,7 +40,7 @@ For a basic description of how the text-to-binary parser works:
 The rest of this document describes how the program converts a text file to a binary file.
 
 *A note on parsing: The separator between items (numbers, datatypes, etc.) is any whitespace (space, tab, new line...).
-The exeption is comments/remarks (`#`) and aliases. Remarks are terminated with new line and aliases can contain spaces but must be declared in a single line.*
+The exeption is comments/remarks (`#`) and aliases, they are terminated by new line.*
 
 ## Datatypes
 
@@ -53,8 +53,55 @@ to byte, use the keyword `byte`.
 `1 int 1 1` gives nine bytes, because the first 1 requires one byte and
 the last two bytes requires four bytes each: `01 01 00 00 00 01 00 00 00`.
 
-*Before any datatype is found in the text document, numbers and addresses are assumed to be bytes.
+*Before any datatype is found in the text document, numbers are assumed to be bytes and addresses/labels are assumed to be unsigned 16-bit numbers (ushort).
 The datatype directives affect both. Labels are always of the same type as the address.*
+
+## All features
+
+This section lists all parser features.
+
+### Numbers
+
+Any number will be compiled to a byte representation of that number. If no datatype is specified, the datatype `byte` is assumed.
+
+**Input:**
+
+`1 2 3`
+
+**Output:**
+
+`01 02 03`
+
+**Input:**
+
+`uint 1 2 3`
+
+**Output:**
+
+`01 00 00 00 02 00 00 00 03 00 00 00`
+
+
+### Datatypes
+
+Datatypes affect the succeeding numbers (`byte` is default) or the address format (if not yet fixed).
+The datatypes are
+`byte` (8-bit unsigned),
+`short` (16-bit signed),
+`ushort` (16-bit unsigned),
+`int` (32-bit signed),
+`uint` (32-bit unsigned),
+`long` (64-bit signed)
+and `ulong` (64-bit unsigned).
+
+**Input:**
+
+`byte 1 ushort 2 uint 3`
+
+**Output:**
+
+`01 02 00 03 00 00 00`
+
+
 
 ## Examples
 

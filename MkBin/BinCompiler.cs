@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MkBin.CompilerService;
 using MkBin.Tokens;
 
@@ -10,6 +11,7 @@ namespace MkBin;
 public class BinCompiler
 {
     private readonly List<string> _parts;
+    private StringBuilder? _disassembly;
 
     public BinCompiler(string source)
     {
@@ -19,6 +21,8 @@ public class BinCompiler
 
     public byte[] Compile()
     {
+        _disassembly = new StringBuilder();
+
         var currentType = NumberType.ByteType;
         var addressType = NumberType.UShortType;
 
@@ -148,9 +152,9 @@ public class BinCompiler
         // Pass 3: Evaluate the labels.
         foreach (var token in tokens)
         {
-            if (token is SetLabelToken slt && tokens.GetLabelCount(slt.LabelName) > 0)
+            if (token is SetLabelToken slt && tokens.GetLabelCount(slt.LabelName) > 1)
                 throw new SystemException($@"Label declared more than once: {slt.LabelName}");
-            else if (token is GetLabelToken glt && tokens.GetLabelCount(glt.LabelName) < 1)
+            if (token is GetLabelToken glt && tokens.GetLabelCount(glt.LabelName) < 1)
                 throw new SystemException($@"Label not found: {glt.LabelName}");
         }
 
@@ -161,9 +165,23 @@ public class BinCompiler
         // Pass 4: Generate the bytes.
         var bytes = new List<byte>();
 
+        var currentNumberFormat = NumberType.ByteType;
+
         foreach (var token in tokens)
+        {
+            if (token is ControlWordToken cwt)
+                currentNumberFormat = cwt.Value;
+            else if (token is NumberToken nt)
+                nt.NumberType = currentNumberFormat;
+
+            _disassembly.AppendLine(token.Disassembly);
+
             bytes.AddRange(token.GetBytes());
+        }
 
         return bytes.ToArray();
     }
+
+    public string Disassembly =>
+        _disassembly.ToString().Trim();
 }

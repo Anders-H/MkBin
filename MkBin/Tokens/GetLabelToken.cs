@@ -33,4 +33,7 @@ public class GetLabelToken : TokenBase
         NumberCompiler.WriteNumeric(Value, NumberType, ref result);
         return result.ToArray();
     }
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString}read out address of label ""{LabelName}"", which is {Value} ({NumberType}).";
 }

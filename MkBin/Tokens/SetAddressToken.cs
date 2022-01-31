@@ -19,4 +19,7 @@ public class SetAddressToken : TokenBase
 
     public override byte[] GetBytes() =>
         Array.Empty<byte>();
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString}set start address to {Value} in {NumberType} format.";
 }

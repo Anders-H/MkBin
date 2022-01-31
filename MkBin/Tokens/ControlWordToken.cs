@@ -16,4 +16,7 @@ internal class ControlWordToken : TokenBase
 
     public override byte[] GetBytes() =>
         Array.Empty<byte>();
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString}set datatype to {Value}.";
 }

@@ -11,6 +11,8 @@ public partial class MainWindow : Form
     private bool _dirtyFlag;
     private bool _unsaved;
     private string _lastResult = "";
+    private string _lastDisassembly = "";
+
     private string _lastMessage = "";
     private Task? _task;
     private string _lastDocumentFilename = "";
@@ -118,7 +120,8 @@ public partial class MainWindow : Form
 
         if (_task.IsCompletedSuccessfully)
         {
-            txtOutput.Text = _lastResult;
+            txtOutput.Text = @"# Result:" + Environment.NewLine + Environment.NewLine + _lastResult;
+            txtDisassembly.Text = @"# Disassembly:" + Environment.NewLine + Environment.NewLine + _lastDisassembly;
             lblStatus.Text = _lastMessage;
             _task.Dispose();
             _task = Task.Run(ProcessText);
@@ -127,9 +130,10 @@ public partial class MainWindow : Form
 
     private bool ProcessText()
     {
+        var success = false;
+        var binCompiler = new BinCompiler(txtInput.Text);
         try
         {
-            var binCompiler = new BinCompiler(txtInput.Text);
             var result = binCompiler.Compile();
             var s = new StringBuilder();
             _lastMessage = $"{result.Length} bytes";
@@ -141,18 +145,21 @@ public partial class MainWindow : Form
             }
 
             _lastResult = s.ToString();
-            return true;
+            success = true;
         }
         catch (Exception e)
         {
             _lastResult = $"Failed to compile string!{Environment.NewLine}{e.Message}";
             _lastMessage = e.Message;
-            return false;
         }
+
+        _lastDisassembly = binCompiler.Disassembly;
+        return success;
     }
 
     private void MainWindow_Shown(object sender, EventArgs e)
     {
+        txtInput.SelectionStart = txtInput.Text.Length;
         timer1.Enabled = true;
     }
 
@@ -276,7 +283,8 @@ public partial class MainWindow : Form
     {
         Cursor = Cursors.WaitCursor;
         var result = ProcessText();
-        txtOutput.Text = _lastResult;
+        txtOutput.Text = @"# Result:" + Environment.NewLine + Environment.NewLine + _lastResult;
+        txtDisassembly.Text = @"# Disassembly:" + Environment.NewLine + Environment.NewLine + _lastDisassembly;
         lblStatus.Text = _lastMessage;
         Refresh();
         Cursor = Cursors.Default;

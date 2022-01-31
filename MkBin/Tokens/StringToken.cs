@@ -21,4 +21,7 @@ public class StringToken : TokenBase
         result.AddRange(Encoding.UTF8.GetBytes(Value[1..^1]));
         return result.ToArray();
     }
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString} ""{Value}"" as string";
 }

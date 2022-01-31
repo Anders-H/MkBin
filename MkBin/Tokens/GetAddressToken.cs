@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Numerics;
 using MkBin.CompilerParts;
 
 namespace MkBin.Tokens;
 
 public class GetAddressToken : TokenBase
 {
-    public BigInteger Value { get; set; }
     public NumberType NumberType { get; set; }
 
     public GetAddressToken(string source, NumberType numberType) : base(source)
     {
-        Value = 0;
         NumberType = numberType;
     }
 
@@ -20,7 +17,7 @@ public class GetAddressToken : TokenBase
         get
         {
             var bytes = new List<byte>();
-            NumberCompiler.WriteNumeric(Value.ToString(), NumberType, ref bytes);
+            NumberCompiler.WriteNumeric(StartAddress, NumberType, ref bytes);
             return bytes.Count;
         }
     }
@@ -28,7 +25,10 @@ public class GetAddressToken : TokenBase
     public override byte[] GetBytes()
     {
         var result = new List<byte>();
-        NumberCompiler.WriteNumeric(Value, NumberType, ref result);
+        NumberCompiler.WriteNumeric(StartAddress, NumberType, ref result);
         return result.ToArray();
     }
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString}read out current address: {StartAddress} ({NumberType}).";
 }

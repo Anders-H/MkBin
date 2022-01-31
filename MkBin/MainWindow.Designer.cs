@@ -42,21 +42,27 @@ namespace MkBin
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.autoUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.txtInput = new System.Windows.Forms.TextBox();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.txtDisassembly = new System.Windows.Forms.TextBox();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.autoUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -143,16 +149,38 @@ namespace MkBin
             this.hexToolStripMenuItem.Checked = true;
             this.hexToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.hexToolStripMenuItem.Name = "hexToolStripMenuItem";
-            this.hexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hexToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.hexToolStripMenuItem.Text = "Hex";
             this.hexToolStripMenuItem.Click += new System.EventHandler(this.hexToolStripMenuItem_Click);
             // 
             // decToolStripMenuItem
             // 
             this.decToolStripMenuItem.Name = "decToolStripMenuItem";
-            this.decToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.decToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.decToolStripMenuItem.Text = "Dec";
             this.decToolStripMenuItem.Click += new System.EventHandler(this.decToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(137, 6);
+            // 
+            // autoUpdateToolStripMenuItem
+            // 
+            this.autoUpdateToolStripMenuItem.Checked = true;
+            this.autoUpdateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoUpdateToolStripMenuItem.Name = "autoUpdateToolStripMenuItem";
+            this.autoUpdateToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.autoUpdateToolStripMenuItem.Text = "Auto update";
+            this.autoUpdateToolStripMenuItem.Click += new System.EventHandler(this.autoUpdateToolStripMenuItem_Click);
+            // 
+            // updateNowToolStripMenuItem
+            // 
+            this.updateNowToolStripMenuItem.Enabled = false;
+            this.updateNowToolStripMenuItem.Name = "updateNowToolStripMenuItem";
+            this.updateNowToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.updateNowToolStripMenuItem.Text = "Update now";
+            this.updateNowToolStripMenuItem.Click += new System.EventHandler(this.updateNowToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -184,7 +212,7 @@ namespace MkBin
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.txtOutput);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(933, 473);
             this.splitContainer1.SplitterDistance = 310;
             this.splitContainer1.SplitterWidth = 5;
@@ -204,9 +232,44 @@ namespace MkBin
             this.txtInput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtInput.Size = new System.Drawing.Size(310, 473);
             this.txtInput.TabIndex = 0;
+            this.txtInput.Text = "# Input:\r\n\r\n";
             this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
             this.txtInput.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtInput_DragDrop);
             this.txtInput.DragOver += new System.Windows.Forms.DragEventHandler(this.txtInput_DragOver);
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Cursor = System.Windows.Forms.Cursors.VSplit;
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.txtDisassembly);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.txtOutput);
+            this.splitContainer2.Size = new System.Drawing.Size(618, 473);
+            this.splitContainer2.SplitterDistance = 227;
+            this.splitContainer2.TabIndex = 2;
+            // 
+            // txtDisassembly
+            // 
+            this.txtDisassembly.AllowDrop = true;
+            this.txtDisassembly.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtDisassembly.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtDisassembly.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtDisassembly.Location = new System.Drawing.Point(0, 0);
+            this.txtDisassembly.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtDisassembly.Multiline = true;
+            this.txtDisassembly.Name = "txtDisassembly";
+            this.txtDisassembly.ReadOnly = true;
+            this.txtDisassembly.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtDisassembly.Size = new System.Drawing.Size(227, 473);
+            this.txtDisassembly.TabIndex = 2;
+            this.txtDisassembly.WordWrap = false;
             // 
             // txtOutput
             // 
@@ -220,8 +283,9 @@ namespace MkBin
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ReadOnly = true;
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(618, 473);
+            this.txtOutput.Size = new System.Drawing.Size(387, 473);
             this.txtOutput.TabIndex = 1;
+            this.txtOutput.WordWrap = false;
             this.txtOutput.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtOutput_DragDrop);
             this.txtOutput.DragOver += new System.Windows.Forms.DragEventHandler(this.txtOutput_DragOver);
             // 
@@ -229,28 +293,6 @@ namespace MkBin
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // autoUpdateToolStripMenuItem
-            // 
-            this.autoUpdateToolStripMenuItem.Checked = true;
-            this.autoUpdateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.autoUpdateToolStripMenuItem.Name = "autoUpdateToolStripMenuItem";
-            this.autoUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.autoUpdateToolStripMenuItem.Text = "Auto update";
-            this.autoUpdateToolStripMenuItem.Click += new System.EventHandler(this.autoUpdateToolStripMenuItem_Click);
-            // 
-            // updateNowToolStripMenuItem
-            // 
-            this.updateNowToolStripMenuItem.Enabled = false;
-            this.updateNowToolStripMenuItem.Name = "updateNowToolStripMenuItem";
-            this.updateNowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.updateNowToolStripMenuItem.Text = "Update now";
-            this.updateNowToolStripMenuItem.Click += new System.EventHandler(this.updateNowToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -275,9 +317,14 @@ namespace MkBin
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -305,5 +352,7 @@ namespace MkBin
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem autoUpdateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateNowToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TextBox txtDisassembly;
     }
 }

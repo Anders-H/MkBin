@@ -7,7 +7,7 @@ namespace MkBin.Tokens;
 public class NumberToken : TokenBase
 {
     public BigInteger Value { get; }
-    public NumberType NumberType { get; }
+    public NumberType NumberType { get; set; }
 
     public NumberToken(string source, BigInteger value, NumberType numberType) :  base(source)
     {
@@ -31,4 +31,7 @@ public class NumberToken : TokenBase
         NumberCompiler.WriteNumeric(Value, NumberType, ref result);
         return result.ToArray();
     }
+
+    public override string Disassembly =>
+        $@"{DisassemblyAddressAsString}number {Value} as {NumberType}.";
 }
