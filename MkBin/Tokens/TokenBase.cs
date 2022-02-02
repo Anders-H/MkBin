@@ -18,5 +18,5 @@ public abstract class TokenBase
     public abstract string Disassembly { get; }
 
     protected string DisassemblyAddressAsString =>
-        $@"{StartAddress:00000} {StartAddress:X04}: Length: {ByteLength} bytes, source: ""{Source}"", ";
+        $@"{StartAddress:00000} {StartAddress:X04}: Length: {ByteLength} bytes, source: {Source}, ";
 }

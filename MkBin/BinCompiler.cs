@@ -1,7 +1,5 @@
-﻿using MkBin.CompilerParts;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using MkBin.CompilerService;
 using MkBin.Tokens;
@@ -23,133 +21,16 @@ public class BinCompiler
     {
         _disassembly = new StringBuilder();
 
-        var currentType = NumberType.ByteType;
-        var addressType = NumberType.UShortType;
-
         // Pass 1: Create the tokens.
-        var tokens = new TokenList();
-        foreach (var p in _parts.Select(part => part.Trim()))
-        {
-            if (string.IsNullOrWhiteSpace(p))
-                continue;
+        var tokens = new TokenConstructor(_parts)
+            .GetTokens();
 
-            var st = StringCompiler.GetToken(p);
-            if (st != null)
-            {
-                tokens.Add(st);
-                continue;
-            }
-
-            var nu = NumberCompiler.GetToken(p, currentType);
-            if (nu != null)
-            {
-                tokens.Add(nu);
-                continue;
-            }
-
-            var cw = ControlWordCompiler.GetToken(p);
-            if (cw != null)
-            {
-                currentType = cw.Value;
-                addressType = cw.Value;
-                tokens.Add(cw);
-                continue;
-            }
-
-            var setAdr = AddressCompiler.GetSetToken(p, currentType);
-            if (setAdr != null)
-            {
-                tokens.Add(setAdr);
-                continue;
-            }
-
-            var getAdr = AddressCompiler.GetGetToken(p, addressType);
-            if (getAdr != null)
-            {
-                tokens.Add(getAdr);
-                continue;
-            }
-
-            var setLbl = LabelCompiler.GetSetToken(p);
-            if (setLbl != null)
-            {
-                tokens.Add(setLbl);
-                continue;
-            }
-
-            var getLbl = LabelCompiler.GetGetToken(p, addressType);
-            if (getLbl != null)
-            {
-                tokens.Add(getLbl);
-                continue;
-            }
-
-            throw new SystemException($@"Failed to parse: {p}");
-        }
+        if (tokens is { Count: <= 0 })
+            return Array.Empty<byte>();
 
         // Pass 2: Evaluate the addresses.
-        var startAddress = tokens.GetStartAddress();
-
-        if (startAddress is byte b)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = b;
-                b += (byte)token.ByteLength;
-            }
-        }
-        else if (startAddress is short s)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = s;
-                s += (byte)token.ByteLength;
-            }
-        }
-        else if (startAddress is ushort us)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = us;
-                us += (byte)token.ByteLength;
-            }
-        }
-        else if (startAddress is int i)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = i;
-                i += (byte)token.ByteLength;
-            }
-        }
-        else if (startAddress is uint ui)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = ui;
-                ui += (byte)token.ByteLength;
-            }
-        }
-        else if (startAddress is long l)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = l;
-                l += (byte)token.ByteLength;
-            }
-        }
-        else if (startAddress is ulong ul)
-        {
-            foreach (var token in tokens)
-            {
-                token.StartAddress = ul;
-                ul += (byte)token.ByteLength;
-            }
-        }
-        else
-        {
-            throw new SystemException($@"Unknown address type: {startAddress.GetType().Name}");
-        }
+        new AddressEvaluation()
+            .EvaluateAddresses(ref tokens);
 
         // Pass 3: Evaluate the labels.
         foreach (var token in tokens)
@@ -185,5 +66,5 @@ public class BinCompiler
     }
 
     public string Disassembly =>
-        _disassembly.ToString().Trim();
+        _disassembly?.ToString().Trim() ?? "";
 }

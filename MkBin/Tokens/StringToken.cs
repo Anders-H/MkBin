@@ -18,10 +18,10 @@ public class StringToken : TokenBase
     public override byte[] GetBytes()
     {
         var result = new List<byte>();
-        result.AddRange(Encoding.UTF8.GetBytes(Value[1..^1]));
+        result.AddRange(Encoding.UTF8.GetBytes(Value));
         return result.ToArray();
     }
 
     public override string Disassembly =>
-        $@"{DisassemblyAddressAsString} ""{Value}"" as string";
+        $@"{DisassemblyAddressAsString}in string format.";
 }
