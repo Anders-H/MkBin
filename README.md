@@ -9,6 +9,12 @@ But it can be used by anyone who wants to represent any binary data as text.
 - When started with `-nohide`, the GUI will show and the console window will remain visible.
 - The program also supports command line jobs and a "prompt mode".
 
+## Install
+
+1. Make sure you have [.NET 6.0 Desktop Runtime 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) or later installed.
+
+2. Download the [MkBinSetup.msi from here](https://winsoft.se/files/MkBinSetup.msi).
+
 ![Screenshot](https://imghost.winsoft.se/upload/792971643660105mkbin.jpg)
 
 The program takes a source file and a target file. The source file is a text representation
