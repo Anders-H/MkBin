@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MkBin.Gui;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,10 +29,8 @@ public partial class MainWindow : Form
         if (_unsaved && !MsgBox.AskOpen(this))
             return;
 
-        using var x = new OpenFileDialog();
-        x.Title = @"Load text description of binary file";
-        x.Filter = @"*.txt|*.txt|*.*|*.*";
-        x.FileName = _lastDocumentFilename;
+        using var x = FileDialogs
+            .GetOpenTextFileDialog(_lastDocumentFilename);
         
         if (x.ShowDialog(this) != DialogResult.OK)
             return;
@@ -79,10 +78,9 @@ public partial class MainWindow : Form
 
     private void saveTextDescriptionOfBinaryFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using var x = new SaveFileDialog();
-        x.Title = @"Save text description of binary file";
-        x.Filter = @"*.txt|*.txt|*.*|*.*";
-        x.FileName = _lastDocumentFilename;
+        using var x = FileDialogs
+            .GetSaveTextFileDialog(_lastDocumentFilename);
+
         if (x.ShowDialog(this) == DialogResult.OK)
         {
             try
