@@ -75,6 +75,7 @@ For more tricks, visit https://github.com/Anders-H/MkBin/blob/master/README.md";
             Console.WriteLine(Arguments);
             return 0;
         }
+
         if (!string.IsNullOrWhiteSpace(prompt))
         {
             if (argumentParser.HasParameter("-source") || argumentParser.HasParameter("-target"))
@@ -108,6 +109,7 @@ For more tricks, visit https://github.com/Anders-H/MkBin/blob/master/README.md";
                 {
                     Console.WriteLine($@"Failed. {e.Message}");
                 }
+
             } while (true);
         }
 
@@ -154,6 +156,7 @@ For more tricks, visit https://github.com/Anders-H/MkBin/blob/master/README.md";
         if (argumentParser.HasParameter("-totext"))
         {
             byte[] source;
+
             try
             {
                 source = File.ReadAllBytes(sourceFilename);

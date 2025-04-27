@@ -10,13 +10,11 @@ internal class NumberCompiler
 {
     public static bool Compile(string input, NumberType currentType, ref List<byte> output)
     {
-        if (IsNumeric(input))
-        {
-            WriteNumeric(input, currentType, ref output);
-            return true;
-        }
+        if (!IsNumeric(input))
+            return false;
 
-        return false;
+        WriteNumeric(input, currentType, ref output);
+        return true;
     }
 
     public static NumberToken? GetToken(string input, NumberType numberType)

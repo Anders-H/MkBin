@@ -8,7 +8,6 @@ public partial class SaveBinaryFile : Form
 {
     private readonly string _source;
     private byte[]? _bytes;
-
     private static string TargetFile { get; set; }
     private static string RunIfSuccessful { get; set; }
     private static bool RunIfSuccessfulEnabled { get; set; }
@@ -47,6 +46,7 @@ public partial class SaveBinaryFile : Form
         }
 
         var success = false;
+
         try
         {
             Storage.SaveBytes(txtTargetFile.Text, _bytes);
@@ -84,9 +84,9 @@ public partial class SaveBinaryFile : Form
         Refresh();
         Application.DoEvents();
         _bytes = null;
-
         var x = new BinCompiler(_source);
         var success = false;
+
         try
         {
             _bytes = x.Compile();

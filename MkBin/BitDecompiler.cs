@@ -14,7 +14,7 @@ public class BitDecompiler
 
     public string Decompile()
     {
-        if (_bytes == null || _bytes.Length <= 0)
+        if (_bytes is not { Length: > 0 })
             return "";
 
         var strings = new List<string>();

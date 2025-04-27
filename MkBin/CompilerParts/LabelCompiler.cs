@@ -4,72 +4,67 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text.RegularExpressions;
 
-namespace MkBin.CompilerParts
+namespace MkBin.CompilerParts;
+
+public class LabelCompiler
 {
-    public class LabelCompiler
+    public static bool CompileSet(string input, ref LabelList labels, BigInteger currentAddress)
     {
-        public static bool CompileSet(string input, ref LabelList labels, BigInteger currentAddress)
-        {
-            var i = input.ToLower();
-            var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
+        var i = input.ToLower();
+        var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
 
-            if (match.Success)
-            {
-                var v = match.Groups[1].Value.Trim();
+        if (match.Success)
+        {
+            var v = match.Groups[1].Value.Trim();
                 
-                if (string.IsNullOrEmpty(v))
-                    throw new Exception("Empty label name.");
+            if (string.IsNullOrEmpty(v))
+                throw new Exception("Empty label name.");
 
-                if (labels.Has(v))
-                    throw new Exception($"Duplicate label: {v}");
+            if (labels.Has(v))
+                throw new Exception($"Duplicate label: {v}");
 
-                labels.Add(new Label(v, currentAddress));
-                return true;
-            }
-
-            return false;
+            labels.Add(new Label(v, currentAddress));
+            return true;
         }
 
-        public static SetLabelToken? GetSetToken(string input)
-        {
-            var i = input.ToLower();
-            var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
-            
-            if (match.Success)
-            {
-                var v = match.Groups[1].Value.Trim();
-                return new SetLabelToken(input, v);
-            }
+        return false;
+    }
 
+    public static SetLabelToken? GetSetToken(string input)
+    {
+        var i = input.ToLower();
+        var match = Regex.Match(i, @"^setlbl:([a-z0-9]+)$");
+
+        if (!match.Success)
             return null;
-        }
 
-        public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, ref List<byte> output)
-        {
-            var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
+        var v = match.Groups[1].Value.Trim();
+        return new SetLabelToken(input, v);
 
-            if (match.Success)
-            {
-                var v = match.Groups[1].Value;
-                if (!labels.Has(v))
-                    throw new Exception($"Missing label: {v}");
+    }
 
-                var result = labels.Get(v)!.Address;
-                NumberCompiler.WriteNumeric(result.ToString(), addressType, ref output);
-                return true;
-            }
+    public static bool CompileGet(string input, ref LabelList labels, NumberType addressType, ref List<byte> output)
+    {
+        var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
 
+        if (!match.Success)
             return false;
-        }
 
-        public static GetLabelToken? GetGetToken(string input, NumberType addressType)
-        {
-            var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
+        var v = match.Groups[1].Value;
+        if (!labels.Has(v))
+            throw new Exception($"Missing label: {v}");
 
-            if (match.Success)
-                return new GetLabelToken(input, match.Groups[1].Value, addressType);
+        var result = labels.Get(v)!.Address;
+        NumberCompiler.WriteNumeric(result.ToString(), addressType, ref output);
+        return true;
+    }
 
-            return null;
-        }
+    public static GetLabelToken? GetGetToken(string input, NumberType addressType)
+    {
+        var match = Regex.Match(input, @"^(?i)lbl:([a-z0-9]+)$");
+
+        return match.Success
+            ? new GetLabelToken(input, match.Groups[1].Value, addressType)
+            : null;
     }
 }

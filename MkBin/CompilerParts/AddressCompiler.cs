@@ -12,31 +12,32 @@ public static class AddressCompiler
     {
         var i = input.ToLower();
         var match = Regex.Match(i, @"^setadr:([0-9]+)$");
-        
-        if (match.Success)
+
+        if (!match.Success)
+            return false;
+
+        var v = match.Groups[1].Value;
+
+        try
         {
-            var v = match.Groups[1].Value;
+            var parsed = BigInteger.Parse(v);
+
             try
             {
-                var parsed = BigInteger.Parse(v);
-
-                try
-                {
-                    var temp = new List<byte>();
-                    NumberCompiler.WriteNumeric(v, currentType, ref temp);
-                }
-                catch
-                {
-                    throw new Exception($"Address {v} cannot fit in type {currentType}.");
-                }
-
-                currentAddress = parsed;
-                return true;
+                var temp = new List<byte>();
+                NumberCompiler.WriteNumeric(v, currentType, ref temp);
             }
             catch
             {
-                throw new Exception($"SetAdr with value {v} failed.");
+                throw new Exception($"Address {v} cannot fit in type {currentType}.");
             }
+
+            currentAddress = parsed;
+            return true;
+        }
+        catch
+        {
+            throw new Exception($"SetAdr with value {v} failed.");
         }
 
         return false;
@@ -47,17 +48,17 @@ public static class AddressCompiler
         var i = input.ToLower();
         var match = Regex.Match(i, @"^setadr:([0-9]+)$");
 
-        if (match.Success)
+        if (!match.Success)
+            return null;
+
+        try
         {
-            try
-            {
-                var v = BigInteger.Parse(match.Groups[1].Value);
-                return new SetAddressToken(input, v, nuberType);
-            }
-            catch
-            {
-                // ignored
-            }
+            var v = BigInteger.Parse(match.Groups[1].Value);
+            return new SetAddressToken(input, v, nuberType);
+        }
+        catch
+        {
+            // ignored
         }
 
         return null;

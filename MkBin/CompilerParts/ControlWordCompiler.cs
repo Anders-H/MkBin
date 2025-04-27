@@ -9,13 +9,11 @@ internal class ControlWordCompiler
     {
         var c = GetNumberTypeFromControlWord(input);
 
-        if (c != null)
-        {
-            currentType = c.Value;
-            return true;
-        }
+        if (c == null)
+            return false;
 
-        return false;
+        currentType = c.Value;
+        return true;
     }
 
     public static ControlWordToken? GetToken(string input)

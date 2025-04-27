@@ -13,7 +13,7 @@ public class TextGenerator
 
     public override string ToString()
     {
-        if (_bytes == null || _bytes.Length <= 0)
+        if (_bytes is not { Length: > 0 })
             return "";
 
         var s = new StringBuilder();
@@ -40,6 +40,7 @@ public class TextGenerator
                 s.AppendLine(expression);
             else
                 s.Append($"{expression} ");
+
             count++;
         }
 

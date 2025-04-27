@@ -13,7 +13,7 @@ public class ArgumentParser
     }
 
     public bool HasArguments =>
-        _args != null && _args.Length > 0;
+        _args is { Length: > 0 };
 
     public string? GetArgumentParameter(string argumentName)
     {

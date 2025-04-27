@@ -81,19 +81,19 @@ public partial class MainWindow : Form
         using var x = FileDialogs
             .GetSaveTextFileDialog(_lastDocumentFilename);
 
-        if (x.ShowDialog(this) == DialogResult.OK)
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        try
         {
-            try
-            {
-                Storage.SaveText(x.FileName, txtInput.Text);
-                _lastDocumentFilename = x.FileName;
-                Text = $@"{_text} - {_lastDocumentFilename}";
-                _unsaved = false;
-            }
-            catch (Exception ex)
-            {
-                MsgBox.SaveFailed(this, ex.Message);
-            }
+            Storage.SaveText(x.FileName, txtInput.Text);
+            _lastDocumentFilename = x.FileName;
+            Text = $@"{_text} - {_lastDocumentFilename}";
+            _unsaved = false;
+        }
+        catch (Exception ex)
+        {
+            MsgBox.SaveFailed(this, ex.Message);
         }
     }
 
@@ -198,14 +198,17 @@ public partial class MainWindow : Form
     private void txtOutput_DragDrop(object sender, DragEventArgs e)
     {
         var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
+        
         if (!dataPresent)
             return;
 
         Cursor = Cursors.WaitCursor;
+
         try
         {
 
-            var files = (string[])e.Data!.GetData(DataFormats.FileDrop);
+            var files = (string[])e.Data!.GetData(DataFormats.FileDrop)!;
+
             if (files.Length <= 0)
                 return;
             
@@ -234,12 +237,13 @@ public partial class MainWindow : Form
     private void txtInput_DragDrop(object sender, DragEventArgs e)
     {
         var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
+
         if (!dataPresent)
             return;
 
         try
         {
-            var files = (string[])e.Data!.GetData(DataFormats.FileDrop);
+            var files = (string[])e.Data!.GetData(DataFormats.FileDrop)!;
             if (files.Length <= 0)
                 return;
 
