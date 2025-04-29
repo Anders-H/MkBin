@@ -109,7 +109,7 @@ and `ulong` (64-bit unsigned).
 
 ### Start address
 
-An address is a given value, the start address, plus the sum of all bytes that have been written so far. A start address is set using `SetAdr:n` where n is a unsigned 16-bit value (if no other type is specified).
+An address is a given value, the start address, plus the sum of all bytes that have been written so far. A start address is set using `SetAdr:n` where `n` is a unsigned 16-bit value (if no other type is specified).
 The current address is recalled using `Adr`.
 
 **Input:**
@@ -119,6 +119,8 @@ The current address is recalled using `Adr`.
 **Output:**
 
 `00 10`
+
+This is because `SetAdr:4096` stores the address `4096` (`0x1000`) and `Adr` recalls the current address, which is `4096` (`0x1000`).
 
 ### Labels
 
@@ -190,7 +192,7 @@ Like aliases, comments/remarks are terminated by a line break. Anything after `#
 
 ### Multiply
 
-To repeat the last digit a given number of times, append * directly followd by the number of times you want to repeat. Example:
+To repeat the last digit a given number of times, append `*` directly followd by the number of times you want to repeat. Example:
 
 **Input:**
 
