@@ -11,11 +11,11 @@ But it can be used by anyone who wants to represent any binary data as text.
 
 ## Install
 
-1. Make sure you have [.NET 6.0 Desktop Runtime 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) or later installed.
+1. Make sure you have [.NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) or later installed. If you are on Windows and don't know what edition of the .NET Desktop Runtime 8.0 you want, it is probably the one called **x64**.
 
-2. Download the [MkBinSetup.msi from here](https://github.com/Anders-H/MkBin/blob/master/MkBinSetup/Release/MkBinSetup.msi).
+2. Download the [MkBinSetup.msi from here](https://winsoft.se/files/SetupMkBin.msi).
 
-![Screenshot](https://imghost.winsoft.se/upload/792971643660105mkbin.jpg)
+![Screenshot](https://winsoft.se/files/mkbin.jpg)
 
 The program takes a source file and a target file. The source file is a text representation
 of a binary file, and the target file is the binary file that will be written.
