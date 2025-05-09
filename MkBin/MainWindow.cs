@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualBasic;
-using MkBin.Gui;
+﻿using MkBin.Gui;
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.Versioning;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -298,7 +298,42 @@ public partial class MainWindow : Form
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using var wc = new System.Net.WebClient();
-        contents = wc.DownloadString(url);
+        Cursor = Cursors.WaitCursor;
+        Refresh();
+
+        try
+        {
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var fieVersionInfo = FileVersionInfo.GetVersionInfo(executingAssembly.Location);
+            var currentVersion = fieVersionInfo.FileVersion;
+
+            if (currentVersion == null)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(this, @"Failed to get version information.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using var httpClient = new System.Net.Http.HttpClient();
+
+            try
+            {
+                var txt = httpClient.GetStringAsync("https://raw.githubusercontent.com/Anders-H/MkBin/refs/heads/master/MkBin/about.txt").Result;
+                txt = txt.Replace("YOUR_VERSION_NUMBER", currentVersion);
+                Cursor = Cursors.Default;
+                MessageBox.Show(this, txt, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(this, $@"Failed to download the about text, but you are running version {currentVersion}.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        catch
+        {
+            // ignored
+        }
+
+        Cursor = Cursors.Default;
     }
 }

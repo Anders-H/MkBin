@@ -39,8 +39,6 @@ public static class AddressCompiler
         {
             throw new Exception($"SetAdr with value {v} failed.");
         }
-
-        return false;
     }
 
     public static SetAddressToken? GetSetToken(string input, NumberType nuberType)

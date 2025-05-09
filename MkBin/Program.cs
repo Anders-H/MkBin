@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Windows.Forms;
 
 namespace MkBin;
 
-internal class Program
+[SupportedOSPlatform("windows")]
+public class Program
 {
     [DllImport("kernel32.dll")]
     private static extern IntPtr GetConsoleWindow();
