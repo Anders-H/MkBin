@@ -1,11 +1,15 @@
-﻿using MkBin.Gui;
+﻿using Microsoft.VisualBasic;
+using MkBin.Gui;
 using System;
+using System.Runtime.Versioning;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MkBin;
 
+[SupportedOSPlatform("windows")]
 public partial class MainWindow : Form
 {
     private string? _text;
@@ -31,7 +35,7 @@ public partial class MainWindow : Form
 
         using var x = FileDialogs
             .GetOpenTextFileDialog(_lastDocumentFilename);
-        
+
         if (x.ShowDialog(this) != DialogResult.OK)
             return;
 
@@ -56,10 +60,10 @@ public partial class MainWindow : Form
         using var x = new OpenFileDialog();
         x.Title = @"Open binary file";
         x.Filter = @"*.*|*.*";
-        
+
         if (x.ShowDialog(this) != DialogResult.OK)
             return;
-        
+
         Cursor = Cursors.WaitCursor;
         try
         {
@@ -190,7 +194,7 @@ public partial class MainWindow : Form
     {
         var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
         e.Effect = dataPresent ? DragDropEffects.Copy : DragDropEffects.None;
-        
+
         if (dataPresent)
             lblStatus.Text = @"Drop binary file here.";
     }
@@ -198,7 +202,7 @@ public partial class MainWindow : Form
     private void txtOutput_DragDrop(object sender, DragEventArgs e)
     {
         var dataPresent = e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false;
-        
+
         if (!dataPresent)
             return;
 
@@ -211,7 +215,7 @@ public partial class MainWindow : Form
 
             if (files.Length <= 0)
                 return;
-            
+
             txtInput.Text = Storage.LoadBinAsText(files[0]);
             Cursor = Cursors.Default;
             _unsaved = true;
@@ -284,11 +288,17 @@ public partial class MainWindow : Form
     private void updateNowToolStripMenuItem_Click(object sender, EventArgs e)
     {
         Cursor = Cursors.WaitCursor;
-        var result = ProcessText();
+        _ = ProcessText();
         txtOutput.Text = @"# Result:" + Environment.NewLine + Environment.NewLine + _lastResult;
         txtDisassembly.Text = @"# Disassembly:" + Environment.NewLine + Environment.NewLine + _lastDisassembly;
         lblStatus.Text = _lastMessage;
         Refresh();
         Cursor = Cursors.Default;
+    }
+
+    private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using var wc = new System.Net.WebClient();
+        contents = wc.DownloadString(url);
     }
 }

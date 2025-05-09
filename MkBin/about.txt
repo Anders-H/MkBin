@@ -1,0 +1,12 @@
+﻿MkBin is a text based editor for creating binary files, mainly for the Commodore platform.
+
+Your version: YOUR_VERSION_NUMBER
+
+Current version: 1.2
+
+URL: https://github.com/Anders-H/MkBin/blob/master/README.md
+
+News:
+
+- Control over the big/little endian byte order.
+- An "about box" to display the version number for this program.

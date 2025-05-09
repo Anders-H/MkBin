@@ -9,11 +9,15 @@
 		<Title>MakeBin</Title>
 		<Description>A text based editor for creating binary files, mainly for the Commodore platform.</Description>
 		<PackageProjectUrl>https://github.com/Anders-H/MkBin</PackageProjectUrl>
-		<PackageReleaseNotes>Moved to .NET 8.</PackageReleaseNotes>
-		<AssemblyVersion>1.1.0</AssemblyVersion>
-		<FileVersion>1.1.0</FileVersion>
+		<PackageReleaseNotes>About box for showing version, warning when opening large files.</PackageReleaseNotes>
+		<AssemblyVersion>1.2.0</AssemblyVersion>
+		<FileVersion>1.2.0</FileVersion>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Version>1.2.0</Version>
+		<Company>WinSoft.se</Company>
+		<Copyright>Anders Hesselbom</Copyright>
+		<RepositoryUrl>https://github.com/Anders-H/MkBin/</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
